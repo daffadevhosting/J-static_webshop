@@ -8,11 +8,15 @@ sitemap: false
  <script src="https://www.google.com/recaptcha/api.js"></script>
  <script>
    function onSubmit(token) {
-     document.getElementById("AdminToko").submit();
+     document.getElementById("whatsapp-order").submit();
    }
  </script>
 
-
+<div class="card">
+  <div class="card-header justify-content-center">
+    <h3 class="text-muted">{{page.title}}</h3><br/><span class="badge text-danger">isi semua data dibawah.</span><div class="float-end">Total Belanja: <span class="text-success fw-bold simpleCart_total"></span></div>
+  </div>
+<div class="card-body">
 <form class="data-form validate-form mt-3" id="whatsapp-order">
 <input class="order no_whatsapp" id="AdminToko" value="{{site.adminWa}}" type="hidden"/>
 <div class="row">
@@ -51,27 +55,30 @@ sitemap: false
 </div>
 
 <div class="row">
-<section class="col-sm-12">
+<section class="col-sm-6">
 <div class="form-group">
   <label class="control-label">Alamat Pengiriman</label>
-  <input id="alamat" class="form-control mb-2 alamat wajib" placeholder="Alamat Rumah">
+  <textarea id="alamat" class="form-control mb-2 alamat wajib" rows="5" placeholder="Alamat Rumah"></textarea>
+</div>
+      </section>
+
+      <section class="col-sm-6">
+<div class="form-group">
+  <label class="control-label"></label>
   <input id="kota" class="form-control mb-2 kota wajib" placeholder="Kota">
   <input id="provinsi" class="form-control mb-2 provinsi wajib" placeholder="Provinsi">
   <input id="kodepos" class="form-control mb-2 kodepos wajib" placeholder="Kode Pos">
 </div>
 </section>
-</div><span class="hidden simpleCart_total"></span>
-<a class="button mt-2 order" id='order'><button type="button" class="btn btn-success btn-sm" onclick="waConfirm()">Send Order</button></a>
+</div>
+<a class="button mt-2 order" id='order'><button type="button" class="btn btn-success btn-sm">Send Order</button></a>
 </form>
-<style>.grecaptcha-badge{z-index:1;}</style>
+    </div>
+</div>
+<style>.grecaptcha-badge{z-index:1;float:left}</style>
 <div class="g-recaptcha"
-      data-sitekey="{{site.sitekey}}"
-      data-callback="order"
-      data-size="invisible">
+     data-sitekey="{{site.sitekey}}"
+     data-callback="onSubmit"
+     data-size="invisible">
 </div>
 <script>grecaptcha.execute();</script>
-<script>
-function waConfirm() {
-  confirm("Kamu akan di alihkan ke whatsapp.");
-}
-</script>

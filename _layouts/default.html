@@ -19,6 +19,7 @@ layout: compress
         </div>
     {% include before_footer.html %}
     {% include modal_search.html %}
+{% if page.url == '/' or page.url contains '/products/' or page.url contains '/category/'  %}
 <button class="btn_cart btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
 <i class="fas fa-shopping-cart"></i>
 <span id="cart-menu" class="position-absolute top-4 start-96 translate-middle badge rounded-pill bg-danger">
@@ -48,6 +49,7 @@ function checkOut() {
 </script>
       </div>
     </div>
+{% endif %}
     {% include footer.html %}
     {% include script_js.html %}
     <script src="{{'/assets/js/simple-jekyll-search.min.js' | relative_url}}"></script>
