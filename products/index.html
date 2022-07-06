@@ -1,0 +1,17 @@
+---
+layout: default
+title: product
+sidebar_option: sidebar
+---
+
+
+    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+    {% for post in paginator.posts %}
+        {% include item_product.html%}
+    {% endfor %}
+    </div>
+    <div class="container">
+    <span class="navigation" role="navigation">
+        {% include pagination.html %}
+    </span>
+    </div>

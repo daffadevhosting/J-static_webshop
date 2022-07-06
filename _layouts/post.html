@@ -1,0 +1,84 @@
+---
+layout: default
+---
+
+<div class="post_product simpleCart_shelfItem" itemscope itemtype="http://schema.org/Product">
+  <div class="row">
+        <section class="product-image col-sm-6 col-md-5 col-lg-6">
+          <div class="styles">
+            {% for style in page.styles %}
+          		<div id="product-{{ forloop.index }}" class="style" {% unless forloop.first %}style="display: none"{% endunless %}>
+    <img class="img-fluid lazyimg {% if forloop.first %}item_thumb{% endif %}" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{ style.image_path }}" width="500" height="500" alt="{{ post.title }}" itemprop="image">
+          		</div>
+          	{% endfor %}
+          </div>
+        </section>
+    <div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
+        <section class="product-details">
+        <div class="d-flex flex-wrap mt-0 py-2 my-2 justify-content-between align-items-center">
+          <div class="entry-title fs-3 item_name" itemprop="name">{{ page.title }}</div>
+            <div class="fav_btn" onclick="favOptions()" >
+                <span id="like-{{ page.code }}" class="like-btn">
+                <i class="fa fa-heart fa-2x"></i>
+                </span>
+            </div>
+        </div>
+          <div class="item_price my-3 text-success fs-3">Rp. {{ page.price }}</div>
+          <span class="text-muted">{{ content }}</span>
+        	<div class="style-picker">
+            <p class="mb-2 mt-2 text-muted">Color</p>
+            {% for style in page.styles %}
+              <div id="product-{{ forloop.index }}"{% if forloop.first %} class="btn btn_color_picker item_warna active"{% endif %} class="btn btn_color_picker" style="background-color: {{ style.color }}"><span class="hidden">{{ style.name }}</span></div>
+            {% endfor %}
+        	</div>
+
+<div class="mobile-only">
+        	<div class="size-picker">
+          <p class="mb-2 mt-2 text-muted">Size</p>
+          <div class="btn-picker">
+            {% for size in page.sizes %}
+            <li id="product-{{ forloop.index }}" class="btn btn-sm btn-dark li-picker {% if forloop.first %}item_ukuran active{% endif %}">{{ size }}</li>
+            {% endfor %}
+          </div>
+            </div>
+        <div class="col-md-12 py-2 my-2">
+              <p class="mb-2 text-muted">Quantity</p>
+				<div class="d-flex flex-wrap justify-content-between align-item-center clearfix">
+            <div class="col-md-6 plusminus-cart-btn float-start">
+                <div class="quantity buttons_added" style="padding: 0.375rem 0.75rem;">
+                    <input type="button" value=" " class="minus btn btn-dark btn-sm" />
+                    <input type="number" step="1" min="1" max="12" name="quantity" value="1" title="Qty" class="item_Quantity input-text qty text-center" size="4" pattern="" inputmode="" disabled/>
+                    <input type="button" value=" " class="plus btn btn-dark btn-sm" />
+                 </div>
+               </div>
+<div class="col-md-6 d-flex justify-content-end float-end" style="padding: 0.375rem 0.75rem;" {% if page.nonaktif == 'enabled' %}title="Stok Habis" disabled{% endif %}>
+<a id="item_add" type="button"class="btn btn-primary item_add" href="javascript:;"> Add to Cart </a>
+</div>
+               </div>
+        </div>
+</div>
+<div id="liveToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+        <div class="d-flex align-items-center">
+           <div class="icon-me">
+      <i class="fas fa-check fa-2x"></i>
+            </div><div class="text-me">  Berhasil, {{ page.title }} sudah masuk keranjang.</div>
+        </div>
+    </div>
+  </div>
+</div>
+<style>
+#liveToast {
+    position: absolute;
+    top: 80px;
+    right: 10px;
+    }
+    .icon-me {
+    padding: 6px;
+    margin-right: 0.75rem;
+}
+</style>
+        </section>
+  </div>
+</div>

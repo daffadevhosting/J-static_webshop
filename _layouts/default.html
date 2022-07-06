@@ -1,0 +1,55 @@
+---
+layout: compress
+---
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+    {% include meta_head.html %}
+<body scroll="no">
+    {% include loader.html %}
+</body>
+<body {% if page.url == '/' %}class="homepage{% if page.sidebar_option != 'sidebar' %} full-width-content{% endif %}" {% elsif page.url contains '/blog/' or page.layout == 'archive' %}class="archive full-width-content" {% elsif page.url contains '/products/' %}class="product" {% elsif page.sidebar_option != 'sidebar' %}class="full-width-content" {% endif %}itemscope itemtype="http://schema.org/WebPage">
+    {% include navbar.html %}
+    {% include back_to_top.html %}
+        {% if page.url == '/' %}
+    {% include carousel.html %}
+        {% endif %}
+        <div class="container {% if page.url == '/' %}mt-0{% else %}mt-3{% endif %}">
+            {{ content }}
+    {% include widget_footer.html %}
+        </div>
+    {% include before_footer.html %}
+    {% include modal_search.html %}
+<button class="btn_cart btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+<i class="fas fa-shopping-cart"></i>
+<span id="cart-menu" class="position-absolute top-4 start-96 translate-middle badge rounded-pill bg-danger">
+    <span class="simpleCart_quantity"></span>
+    </span>
+</button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title text-success" id="offcanvasCartLabel">Items : <span class="simpleCart_quantity"></span></h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        {% include keranjang.html %}
+<div class="cart-sidebar-footer checkout-layout">
+<div class="cart-store-details">
+<div class=" d-flex mt-2 flex-wrap justify-content-between">
+<p class="text-white">Total Produk <strong class="float-right">*<span class="simpleCart_total"></span></strong></p>
+<p class="mb-5"> <strong class="float-right fw-light fs-12 text-danger">*Belum Termasuk Ongkir</strong></p>
+</div>
+<button onclick="checkOut()" class="btn btn-secondary btn-lg btn-block d-flex flex-wrap justify-content-between text-left" type="button"><span class="float-left"><i class="fa fa-cart-outline"></i> Proceed to Checkout </span><span class="float-right"><strong><span class="simpleCart_total"></span></strong> <span class="fa fa-chevron-right"></span></span></button>
+</div>
+</div>
+<script>
+function checkOut() {
+  location.replace("/checkout")
+}
+</script>
+      </div>
+    </div>
+    {% include footer.html %}
+    {% include script_js.html %}
+    <script src="{{'/assets/js/simple-jekyll-search.min.js' | relative_url}}"></script>
+  </body>
+</html>

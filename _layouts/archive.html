@@ -1,0 +1,21 @@
+---
+layout: default
+title: Archive
+---
+
+
+<h5 class="mb-3"><span>{{ page.type }} Produk {{ page.title }}</span> bulan {{ site.time | date: '%B' }} ini</h5>
+
+<div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
+
+{% for post in page.posts %}
+
+{% include item_product.html %}
+
+{% endfor %}
+
+</div>
+    <div class="col-md-12 py-2 my-2 d-flex justify-content-center">
+      <a class="btn btn-sm btn-dark" href="{{site.baseurl}}/products" role="button">Lihat Semua Produk</a>
+    </div>
+

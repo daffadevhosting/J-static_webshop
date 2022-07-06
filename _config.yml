@@ -1,0 +1,68 @@
+url: ""
+baseurl: ""
+title: "J-static"
+description: "A static OnLine shop base on jekyll & simpleCart, with whatsapp checkout form."
+
+dev: unangning_EU
+noAdmin: 081386267897
+
+alamat: 'Jl. Raya Resort, Mekarsaluyu,<br/>Kec. Cimenyan, Kabupaten Bandung,'
+lengkap: 'Jawa Barat 40198'
+maps: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.192389487675!2d107.63110718143614!3d-6.867535040878643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e70f77161917%3A0xde1d623280bd2701!2sTaman%20Dago%20Pakar%20Waterfall!5e0!3m2!1sid!2sid!4v1657065166016!5m2!1sid!2sid
+
+# Plugins
+plugins:
+  - jekyll-minify-html
+  - jekyll-paginate
+  - jekyll-timeago
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-archives
+  - jekyll-figure
+
+permalink: /products/:title/
+
+# Site Pagination
+paginate: 6
+paginate_path: /products/page:num/
+
+# Sass Folder
+sass:
+    sass_dir: _sass
+    style: compressed
+
+# Custom Collections
+collections:
+  blogs:
+    output: true
+
+# Collection Defaults
+defaults:
+- scope:
+    type: posts
+  values:
+    layout: post
+- scope:
+    type: pages
+  values:
+    layout: page
+- scope:
+    type: blogs
+  values:
+    layout: blog
+
+# Frontmatter Defaults
+sidebar_options:
+  - sidebar
+  - no-sidebar
+
+# Archives
+jekyll-archives:
+  enabled:
+    - categories
+  layout: archive
+  permalinks:
+    category: '/category/:name/'
+    
+exclude: [lib, config.rb, .sass-cache, Capfile, config, log, Rakefile, Rakefile.rb, tmp, Gemfile, Gemfile.lock, README.md, LICENSE.md, node_modules, gulpfile.js, package.json, package-lock.json]
