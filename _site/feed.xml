@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>J-static</title>
+    <description>A static OnLine shop base on jekyll &amp; simpleCart, with whatsapp checkout form.</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 06 Jul 2022 09:43:52 +0700</pubDate>
+    <lastBuildDate>Wed, 06 Jul 2022 09:43:52 +0700</lastBuildDate>
+    <generator>Jekyll v4.2.2</generator>
+    
+      <item>
+        <title>Gavin the Tiger</title>
+        <description>&lt;p&gt;Gavin the tiger was brought up vegan. His favorite meal is chickpea salad with a lemon juice dressing.&lt;/p&gt;
+
+&lt;p&gt;Slim Fit, 5oz 100% Cotton T-Shirt.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 16 Jan 2022 00:00:00 +0700</pubDate>
+        <link>http://localhost:4000/products/tiger/</link>
+        <guid isPermaLink="true">http://localhost:4000/products/tiger/</guid>
+        
+        
+        <category>Terbaru</category>
+        
+      </item>
+    
+      <item>
+        <title>Scar the Lion</title>
+        <description>&lt;p&gt;Scar the lion is always true to himself. The Mufasa tragedy was a slight blemish in what was otherwise a saint-like life.&lt;/p&gt;
+
+&lt;p&gt;Slim Fit, 5oz 100% Cotton T-Shirt.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 15 Jan 2022 00:00:00 +0700</pubDate>
+        <link>http://localhost:4000/products/lion/</link>
+        <guid isPermaLink="true">http://localhost:4000/products/lion/</guid>
+        
+        
+        <category>Terbaru</category>
+        
+      </item>
+    
+      <item>
+        <title>Todd the Hedgehog</title>
+        <description>&lt;p&gt;Todd the hedgehog may have a spiky exterior but his heart is made of gold. Unfortunately this weighs him down and makes it difficult for him to get around.&lt;/p&gt;
+
+&lt;p&gt;Slim Fit, 5oz 100% Cotton T-Shirt.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 14 Jan 2022 00:00:00 +0700</pubDate>
+        <link>http://localhost:4000/products/hog/</link>
+        <guid isPermaLink="true">http://localhost:4000/products/hog/</guid>
+        
+        
+        <category>Terlaris</category>
+        
+      </item>
+    
+      <item>
+        <title>Gerald the Giraffe</title>
+        <description>&lt;p&gt;Gerald the giraffe isn’t particularly spiritual but he has a long neck which can help you in a pinch.&lt;/p&gt;
+
+&lt;p&gt;Slim Fit, 5oz 100% Cotton T-Shirt.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 13 Jan 2022 00:00:00 +0700</pubDate>
+        <link>http://localhost:4000/products/giraffe/</link>
+        <guid isPermaLink="true">http://localhost:4000/products/giraffe/</guid>
+        
+        
+        <category>Terlaris</category>
+        
+      </item>
+    
+      <item>
+        <title>Bumble the Elephant</title>
+        <description>&lt;p&gt;Bumble the humble elephant is your shinning star. He will always remember who you are and why you are here.&lt;/p&gt;
+
+&lt;p&gt;Slim Fit, 5oz 100% Cotton T-Shirt.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 12 Jan 2022 00:00:00 +0700</pubDate>
+        <link>http://localhost:4000/products/elephant/</link>
+        <guid isPermaLink="true">http://localhost:4000/products/elephant/</guid>
+        
+        
+        <category>Terbaru</category>
+        
+      </item>
+    
+      <item>
+        <title>Sacha the Deer</title>
+        <description>&lt;p&gt;Sacha’s elegant antlers have never been seen on such a beautiful t-shirt. Wear this majestic beast and feel all your problems float away.&lt;/p&gt;
+
+&lt;p&gt;Slim Fit, 5oz 100% Cotton T-Shirt.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 11 Jan 2022 00:00:00 +0700</pubDate>
+        <link>http://localhost:4000/products/deer/</link>
+        <guid isPermaLink="true">http://localhost:4000/products/deer/</guid>
+        
+        
+        <category>Terbaru</category>
+        
+      </item>
+    
+  </channel>
+</rss>
