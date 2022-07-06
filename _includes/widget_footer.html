@@ -1,0 +1,18 @@
+<div class="row footer-widgets mt-3 {% if page.url contains '/blogs/' %}hidden{% endif %}">
+    <div class="footer-widget d-flex">
+{% for data in site.data.widget %}
+      <section class="col p-3 widget card shadow-sm">
+        <div class="icon-widget">
+        <i class="{{data.fa-icon}} fa-3x" aria-hidden="true"></i>
+        </div>
+        <div class="widget-tex">
+        <p class="mb-0 text-muted fw-bold">{{data.text}}</p>
+        <small class="fw-light">{{data.p-text}}</small>
+<button class="badge bg-primary mb-0 justify-content-end float-end fs-7" data-bs-toggle="modal" data-bs-target="#static{{data.id}}">Pelajari</button>
+        </div>
+      </section>
+{%endfor%}
+    </div>
+</div>
+{% include modal.html %}
+

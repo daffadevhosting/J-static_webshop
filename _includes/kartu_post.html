@@ -1,0 +1,16 @@
+<div class="row">
+{% for blog in site.blogs limit:2 %}
+  <div class="col-sm-6">
+    <div class="card kartu_iklan shadow-sm">
+        <img class="thumb_img" src="{{blog.image_path}}" width="100%" height="200px" alt="{{blog.title}}"/>
+<div class="card-img-overlay" style="background-color:#11221159;">
+<h5 class="card-title text-white">{{blog.title}}</h5>
+ <small class="card-text text-white">{{blog.description}}</small>
+</div>
+  <div class="card-img-overlay middle">
+    <a type="button" class="btn btn-sm btn-dark" href="{{site.baseurl}}{{blog.url}}">Baca Artikel</a>
+  </div>
+    </div>
+  </div>
+{% endfor %}
+</div>

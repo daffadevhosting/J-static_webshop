@@ -1,0 +1,5 @@
+<a type="button" class="btn btn-primary btn-floating btn-lg" onclick="topFunction()" id="toTop" title="Go to top"><i class="fas fa-caret-up fa-1x"></i></a>
+
+<script>
+let mybutton=document.getElementById("toTop");function scrollFunction(){document.body.scrollTop>20||document.documentElement.scrollTop>20?mybutton.style.display="block":mybutton.style.display="none"}function topFunction(){document.body.scrollTop=0,document.documentElement.scrollTop=0}window.onscroll=function(){scrollFunction()},mybutton.addEventListener("click",toTop)
+</script>

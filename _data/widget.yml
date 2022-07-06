@@ -1,0 +1,16 @@
+- fa-icon: fab fa-whatsapp
+  text: Checkout via whatsApp form
+  p-text: Checkout lebih mudah dan terpercaya,<br /> langsung ke whatsapp.
+  id: 101
+
+- fa-icon: fa fa-shopping-basket
+  text: 100% Satisfaction Guarantee
+  p-text: Menjamin kualitas dan layanan terbaik untuk anda.
+  id: 102
+
+- fa-icon: fas fa-truck
+  text: Next day delivery
+  p-text: Pesan hari ini akan selalu dikirim keesokan harinya.
+  id: 103
+
+

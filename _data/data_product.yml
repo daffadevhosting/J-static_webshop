@@ -1,0 +1,29 @@
+- url: /products/deer
+  img: /images/products/deer/black.jpg
+  title: Sacha the Deer
+  harga: '5.000'
+
+- url: /products/hog
+  img: /images/products/hog/blue.jpg
+  title: Todd the Hedgehog
+  harga: '10.000'
+
+- url: /products/elephant
+  img: /images/products/elephant/green.jpg
+  title: Bumble the Elephant
+  harga: '14.000'
+
+- url: /products/lion
+  img: /images/products/lion/blue.jpg
+  title: Scar the Lion
+  harga: '15.000'
+
+- url: /products/giraffe
+  img: /images/products/giraffe/green.jpg
+  title: Gerald the Giraffe
+  harga: '11.000'
+
+- url: /products/tiger
+  img: /images/products/tiger/cream.jpg
+  title: Gavin the Tiger
+  harga: '6.000'

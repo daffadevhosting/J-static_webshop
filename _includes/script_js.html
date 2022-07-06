@@ -1,0 +1,29 @@
+	<script src="{{ '/assets/js/lazyload.js' | relative_url }}"></script>
+    <script src="https://cdnjs.daffadev.workers.dev/1d09a5cc615ca1b20b306ca3d1236d2242ad4513/j-static/simpleCart.js?version = 1.0.1"></script>
+    <script async src="https://cdnjs.daffadev.workers.dev/3bd128bc13dc2465864b3fdbea58313ed2cb0d9c/j-static/formOrder.js?version = 1.0"></script>
+    <script async src="https://cdnjs.daffadev.workers.dev/03e0b7956f47578b6f7653a1993fd2a09ebe10fb/j-static/mainForm.js"></script>
+    <script async src="{{ '/assets/js/sweetalert.min.js' | relative_url }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    {% if page.url contains '/products/' %}
+      <script async src="https://cdnjs.daffadev.workers.dev/03e0b7956f47578b6f7653a1993fd2a09ebe10fb/j-static/add-to-cart.js"></script>
+      <script async src="{{ '/assets/js/app.js?v2.0' | relative_url }}"></script>
+    {% endif %}
+    {% if page.url == '/checkout/' %}
+      <script async src="https://cdnjs.daffadev.workers.dev/03e0b7956f47578b6f7653a1993fd2a09ebe10fb/j-static/checkout.js"></script>
+    {% endif %}
+	<script src="{{ '/assets/js/popper/umd/popper.min.js' | relative_url }}"></script>
+	<script src="{{ '/assets/js/bootstrap/bootstrap.bundle.min.js' | relative_url }}"></script>
+	<script src="{{ '/assets/js/fontawesome/all.min.js' | relative_url }}"></script>
+<script type="text/javascript">
+var Messages=new Date,Jams=Messages.getHours();document.getElementById("WelcomeMessage").innerHTML=5<=Jams&&Jams<=11?"Selamat Pagi":12<=Jams&&Jams<=15?"Selamat Siang":15<=Jams&&Jams<=17?"Selamat Sore":18<=Jams&&Jams<=23?"Selamat malam":"Selamat malam menjelang pagi"
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".show").click(function(){
+    $("#show").hide();
+  });
+  $(".item_add").click(function(){
+    $("#liveToast").show().fadeOut(5000);
+  });
+});
+</script>

@@ -1,0 +1,24 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center py-2 my-2">
+    <div class="col-md-4 d-flex align-items-center">
+      <span class="text-muted">Produk Terbaru</span>
+    </div>
+    <div class="col-md-4 d-flex justify-content-end">
+      <a class="btn btn-sm btn-dark" href="{{site.baseurl}}/category/terbaru" role="button">Lihat Semua</a>
+    </div>
+</div>
+<div class="row row-cols-2 row-cols-lg-3 g-2 g-lg-3">
+{% for item in site.data.data_product %}
+    <div class="col">
+        <div class="card shadow-sm">
+            <a href="{{item.url}}">
+          <img class="img-fluid lazyimg rounded" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{site.baseurl}}{{ item.img }}" alt="{{ item.title }}"/>
+            <div class="overlays"></div>
+            </a>
+            <div class="card-body bg-light text-center">
+              <p class="fs-6 fw-bold">{{ item.title }}</p>
+              <p class="mb-0 fs-6 text-danger">Rp. {{ item.harga }}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>

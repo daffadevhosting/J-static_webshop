@@ -1,0 +1,104 @@
+<style>
+.widgetCopyright .widgetFooter {
+    padding: 40px 0;
+    font-size: 95%;
+    display: flex;
+    grid-gap: 40px;
+    text-align: center;
+    align-items: flex-start;
+}
+.widgetCopyright .widgetFooter .widget .payShipIcon li {
+    display: inline-block;
+    height: 36px;
+    width: 72px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    margin: 3px 2px;
+    background-color: #fff;
+    border-radius: 2px;
+    background-position: center center;
+    background-size: 70% auto;
+    background-repeat: no-repeat;
+}
+
+@media (min-width: 320px) and (max-width: 767.98px){
+.widgetCopyright .widgetFooter {
+    padding: 40px 20px;
+    font-size: 95%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 40px;}
+}
+.widget-content {
+    padding-top: 15px;
+}
+.fancybox__content{padding:0px;}
+</style>
+{% if page.url == "/" %}
+<div class="widgetCopyright" id="sticky-stop">
+<div class="container">
+<div class="grid1 widgetFooter section" id="tw_wFooter" name="Widget Footer">
+<div class="widget HTML" data-version="1" id="HTML301">
+<h5 itemprop="name">Alamat Kami</h5>
+<p/>
+<div class="widget-content">
+{{site.alamat}} <br>
+{{site.lengkap}}
+<br><br>
+Lihat di 
+<a
+  href="{{site.maps}}"
+  data-fancybox
+  data-type="iframe"
+  data-preload="true"
+  data-width="640"
+  data-height="480"
+  referrerpolicy="no-referrer-when-downgrade"
+>
+  Google Maps <i class="fas fa-map-marker-alt"></i>
+</a>
+</div>
+<div class="clear"></div>
+</div><div class="widget mx-auto HTML" data-version="1" id="HTML302">
+<h5 itemprop="name">Pembayaran &amp; Pengiriman</h5>
+<p/>
+<div class="widget-content">
+<ul class="p-0 payShipIcon mb-0">
+
+<li class="" style="background-image:url('https://lh3.googleusercontent.com/-DzsioYaEw00/XJx4ldwgXbI/AAAAAAAAFOA/6xR4vKNHJnYPzyAmN_sike27rzTozXW8QCLcBGAs/h110/bca.png');"></li>
+
+<li class="" style="background-image:url('https://lh3.googleusercontent.com/-Km8RS__aFmY/XJx4lSZom7I/AAAAAAAAFOE/D6BYDFfRpUQdKILGREKGtKN8lLsjMijzACLcBGAs/h107/bni.png');"></li>
+
+<li class="" style="background-image:url('https://lh3.googleusercontent.com/-_si-RcoPgn8/XJx4laAI9DI/AAAAAAAAFN8/H6p0uAGp5LsjeETFJCO0wrX0IVRUMRsOQCLcBGAs/h71/bri.png');"></li>
+
+<li class="" style="background-image:url('https://lh3.googleusercontent.com/-7wME_gGOqlE/XJx4nKuMKoI/AAAAAAAAFOQ/e_g1zof81zA4RtoLvhXId-u5bbwynm2fgCLcBGAs/h105/mandiri.png');"></li>
+
+<!--<li class="" style="background-image:url('https://www.xendit.co/wp-content/uploads/2020/03/XENDIT-LOGOArtboard-1@2x.png');"></li>-->
+</ul>
+<ul class="p-0 payShipIcon">
+<li class="" style="background-image:url('https://lh3.googleusercontent.com/-bmR99IJVVgs/XJyJvgK6TAI/AAAAAAAAFO0/f4kes-sBkdwh0MKg9YTizGyequFiJG_zQCLcBGAs/h59/gosend.png');"></li>
+
+<li class="" style="background-image:url('https://lh3.googleusercontent.com/-AZfVimg7zlg/XJySF1Sxz7I/AAAAAAAAFPk/aEnZek3H1wksEG82XYy6qzxIMb5RUbvZwCLcBGAs/h100/grabexpress.png');"></li>
+
+<li class="" style="background-image:url('https://lh3.googleusercontent.com/-A4IzXY7MGew/XJyJvmrl9uI/AAAAAAAAFO4/3WNw2gXt6pk86FTh8iTS3kNkgaUZFlhEwCLcBGAs/h120/jne.png');"></li>
+
+<li class="" style="background-image:url('https://lh3.googleusercontent.com/-LjnAqSKmSIc/XJyJwMnuvFI/AAAAAAAAFPE/elFwJToqWjkYwp4HTf9wS2Leqb4sRV-3ACLcBGAs/h76/jnt');"></li>
+
+</ul>
+</div>
+<div class="clear"></div>
+</div><div class="widget HTML" data-version="1" id="HTML303">
+<h5 itemprop="name">Hubungi Kami</h5>
+<p/>
+<div class="widget-content">
+<div class="btnGroup">
+<button class="btn btn-sm btn-success"><i class="fab fa-whatsapp"></i> Whatsapp</button>
+<button class="btn btn-sm btn-telegram"><i class="fab fa-telegram"></i> Telegram</button>
+</div>
+<br>
+<small style="font-size:10px;color:#dc3545;">* <b>Senin - Sabtu</b> ( 07:00 s/d 17:00 )</small>
+</div>
+<div class="clear"></div>
+</div></div>
+</div>
+</div>
+{% endif %}
