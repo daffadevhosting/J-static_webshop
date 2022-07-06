@@ -22,8 +22,8 @@ $ bundle exec jekyll serve
 
 dan silahkan ganti gambar produk dan keterangan produk, juga blog post sesuai dengan barang jualan kamu.
 
-<img src="{{ site.baseurl }}/images/logo/(Nest Hub Max1).png" alt="J-static_webshop" style="width:100%;"/>
+<img src="/images/logo/(Nest Hub Max1).png" alt="J-static_webshop" style="width:100%;"/>
 <p/>
-<img src="{{ site.baseurl }}/images/logo/(Nest Hub Max2).png" alt="J-static_webshop" style="width:100%;"/>
+<img src="/images/logo/(Nest Hub Max2).png" alt="J-static_webshop" style="width:100%;"/>
 <p/>
-<img src="{{ site.baseurl }}/images/logo/(Nest Hub Max).png" alt="J-static_webshop" style="width:100%;"/>
+<img src="/images/logo/(Nest Hub Max).png" alt="J-static_webshop" style="width:100%;"/>
