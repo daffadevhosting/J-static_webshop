@@ -5,29 +5,73 @@ description:
 sitemap: false
 ---
 
+ <script src="https://www.google.com/recaptcha/api.js"></script>
+ <script>
+   function onSubmit(token) {
+     document.getElementById("AdminToko").submit();
+   }
+ </script>
 
 
-{% include under_constrac.html %}
+<form class="data-form validate-form mt-3" id="whatsapp-order">
+<input class="order no_whatsapp" id="AdminToko" value="{{site.adminWa}}" type="hidden"/>
+<div class="row">
+      <section class="col-sm-6">
+<div class="form-group">
+  <label class="control-label">Nama Lengkap</label>
+  <input id="nama" type="text" class="form-control mb-2 nama wajib" placeholder="Nama Lengkap">
+</div>
+      </section>
 
-<!--<form method="post" action="/">
-  <label>First Name</label>
-  <input type="text" name="First Name">
+      <section class="col-sm-6">
+<div class="form-group">
+  <label class="control-label">Nomor WhatsApp</label>
+  <input id="nomor" type="number" min="11" class="form-control mb-2 nomor wajib" placeholder="Nomor WhatsApp">
+</div>
+      </section>
+</div>
+<div class="row">
+      <section class="col-sm-6">
+<div class="form-group">
+  <label class="control-label">Alamat Email</label>
+  <input id="email" type="email" class="form-control mb-2 email wajib" placeholder="Alamat E-mail">
+</div>
+      </section>
 
-  <label>Last Name</label>
-  <input type="text" name="Last Name">
+      <section class="col-sm-6">
+<div class="form-group">
+  <label class="control-label">Kurir</label>
+          <select class="form-select mb-2 informasi wajib" value="J%26T Express" placeholder="Pilih Kurir " interface="action-sheet">
+            <option value="J%26T Express">J&amp;T Express</option>
+            <option value="JNE Express">JNE Express</option>
+            <option value="*Grab Express">*GrabExpress</option>
+            <option value="*GoSend">*GoSend</option>
+          </select>
+      </section>
+</div>
 
-  <label>Email Address</label>
-  <input type="text" name="Email">
-
-  <label>Mailing Address</label>
-  <input type="text" name="Street" placeholder="Street">
-  <input type="text" name="City" placeholder="City">
-  <input type="text" name="State" placeholder="State">
-  <input type="text" name="Zip Code" placeholder="Zip Code">
-
-  <input type="hidden" name="_to" value="brad@bradonomics.com,zine@webniyom.com">
-  <input type="text" name="_gotcha" style="display: none;">
-
-  <input type="submit" value="Send Order">
-</form>-->
-
+<div class="row">
+<section class="col-sm-12">
+<div class="form-group">
+  <label class="control-label">Alamat Pengiriman</label>
+  <input id="alamat" class="form-control mb-2 alamat wajib" placeholder="Alamat Rumah">
+  <input id="kota" class="form-control mb-2 kota wajib" placeholder="Kota">
+  <input id="provinsi" class="form-control mb-2 provinsi wajib" placeholder="Provinsi">
+  <input id="kodepos" class="form-control mb-2 kodepos wajib" placeholder="Kode Pos">
+</div>
+</section>
+</div><span class="hidden simpleCart_total"></span>
+<a class="button mt-2 order" id='order'><button type="button" class="btn btn-success btn-sm" onclick="waConfirm()">Send Order</button></a>
+</form>
+<style>.grecaptcha-badge{z-index:1;}</style>
+<div class="g-recaptcha"
+      data-sitekey="{{site.sitekey}}"
+      data-callback="order"
+      data-size="invisible">
+</div>
+<script>grecaptcha.execute();</script>
+<script>
+function waConfirm() {
+  confirm("Kamu akan di alihkan ke whatsapp.");
+}
+</script>
