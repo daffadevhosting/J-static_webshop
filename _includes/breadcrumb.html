@@ -1,0 +1,7 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{site.baseurl}}/">Home</a></li>
+    {% unless page.categories == empty %}{% for category in page.categories %}<li class="breadcrumb-item"><a href="/category/{{ category | slugify }}/">{{ category }}</a>{% unless forloop.last %}, {% endunless %} </li>{% endfor %}{% endunless %}
+    <li class="breadcrumb-item active" aria-current="page">{{page.title}}</li>
+  </ol>
+</nav>

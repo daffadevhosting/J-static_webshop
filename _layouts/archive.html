@@ -4,7 +4,7 @@ title: Archive
 ---
 
 
-<h5 class="mb-3"><span>{{ page.type }} Produk {{ page.title }}</span> bulan {{ site.time | date: '%B' }} ini</h5>
+<h5 class="mb-3"><span>{{ page.type }}{% if page.url contains '/tag/' %} produk{% endif %} {{ page.title }}</span> {% if page.url contains '/tag/' %}bulan {{ site.time | date: '%B' }} ini{% endif %}</h5>
 
 <div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
 

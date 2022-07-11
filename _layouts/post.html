@@ -2,6 +2,7 @@
 layout: default
 ---
 
+{% include breadcrumb.html %}
 <div class="post_product simpleCart_shelfItem" itemscope itemtype="http://schema.org/Product">
 <small class="hidden item_link">{{site.url}}{{page.url}}</small>
   <div class="row">
@@ -9,7 +10,7 @@ layout: default
           <div class="styles">
             {% for style in page.styles %}
           		<div id="product-{{ forloop.index }}" class="style" {% unless forloop.first %}style="display: none"{% endunless %}>
-    <img class="img-fluid lazyimg {% if forloop.first %}item_thumb{% endif %}" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{ style.image_path }}" width="500" height="500" alt="{{ post.title }}" itemprop="image">
+    <img class="img-fluid lazyimg {% if forloop.first %}item_thumb{% endif %}" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{ style.image_path }}" width="520" height="500" alt="{{ post.title }}" itemprop="image">
           		</div>
           	{% endfor %}
           </div>
@@ -44,7 +45,7 @@ layout: default
             </div>
         <div class="col-md-12 py-2 my-2">
               <p class="mb-2 text-muted">Quantity</p>
-				<div class="d-flex flex-wrap justify-content-between align-item-center clearfix">
+				<div class="d-flex flex-wrap justify-content-between align-item-center">
             <div class="col-md-6 plusminus-cart-btn float-start">
                 <div class="quantity buttons_added" style="padding: 0.375rem 0.75rem;">
                     <input type="button" value=" " class="minus btn btn-dark btn-sm" />
@@ -58,7 +59,7 @@ layout: default
                </div>
         </div>
 </div>
-<div id="liveToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+<div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
   <div class="d-flex">
     <div class="toast-body">
         <div class="d-flex align-items-center">
