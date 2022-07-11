@@ -2,6 +2,7 @@ url: "https://j-store.pages.dev"
 baseurl: ""
 title: "J-static"
 description: "A static OnLine shop base on jekyll & simpleCart, with whatsapp checkout form."
+avatar: /images/logo/cart-icon.webp
 
 dev: unangning_EU
 adminWa: 081386267897

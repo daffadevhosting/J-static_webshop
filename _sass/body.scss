@@ -30,6 +30,12 @@ body.dark_mode {
     }
 }
 
+.navbar-brand .icon_header {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   border-radius: 8px;
@@ -72,3 +78,9 @@ body.dark_mode {
   background-color: $secondary;
 }
 .hidden { display:none; }
+
+.flex_items_center {
+    display: flex;
+    align-items: center;
+    grid-gap: 0 4px;}
+

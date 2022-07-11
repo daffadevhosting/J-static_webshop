@@ -14,6 +14,17 @@
     flex: 1 1 auto;
     padding: 0.5rem 0.5rem !important;
     z-index: 1;
+
+.price_star {
+    padding: 0 10px;
+        @include mobile{
+    padding: 0;}
+    }
+
+.flex_items_between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;}
 }
 
 .kartu_iklan:hover .image {
