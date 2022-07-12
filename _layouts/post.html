@@ -9,8 +9,9 @@ layout: default
         <section class="product-image col-sm-6 col-md-5 col-lg-6">
           <div class="styles">
             {% for style in page.styles %}
-          		<div id="product-{{ forloop.index }}" class="style" {% unless forloop.first %}style="display: none"{% endunless %}>
+          		<div id="product-{{ forloop.index }}" class="card ja_center border-0" {% unless forloop.first %}style="display: none"{% endunless %}>
     <img class="img-fluid lazyimg {% if forloop.first %}item_thumb{% endif %}" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{ style.image_path }}" width="520" height="500" alt="{{ post.title }}" itemprop="image">
+            {% if page.stock != 'Tersedia' %}<div class="stock_habis"></div>{% else %}{% endif %}
           		</div>
           	{% endfor %}
           </div>
@@ -25,7 +26,8 @@ layout: default
                 </span>
             </div>
         </div>
-          <div class="item_price my-3 text-success fs-3">Rp. {{ page.price }}</div>
+          <div class="item_price text-success fs-3">Rp. {{ page.price }}</div>
+        <div class="stock mb-3 text-muted">Stok {% if page.stock != 'Tersedia' %}<span class="text-danger">Habis</span>{% else %}<span class="text-success"> {{ page.stock }}</span>{% endif %}</div>
           <span class="text-muted">{{ content }}</span>
         	<div class="style-picker">
             <p class="mb-2 mt-2 text-muted">Color</p>
@@ -48,13 +50,15 @@ layout: default
 				<div class="d-flex flex-wrap justify-content-between align-item-center">
             <div class="col-md-6 plusminus-cart-btn float-start">
                 <div class="quantity buttons_added" style="padding: 0.375rem 0.75rem;">
-                    <input type="button" value=" " class="minus btn btn-dark btn-sm" />
+                    <input type="button" value=" " class="minus btn btn-primary btn-sm" />
                     <input type="number" step="1" min="1" max="12" name="quantity" value="1" title="Qty" class="item_Quantity input-text qty text-center" size="4" pattern="" inputmode="" disabled/>
-                    <input type="button" value=" " class="plus btn btn-dark btn-sm" />
+                    <input type="button" value=" " class="plus btn btn-primary btn-sm" />
                  </div>
                </div>
-<div class="col-md-6 d-flex justify-content-end float-end" style="padding: 0.375rem 0.75rem;" {% if page.nonaktif == 'enabled' %}title="Stok Habis" disabled{% endif %}>
+<div class="col-md-6 d-flex justify-content-end float-end" style="padding: 0.375rem 0.75rem;">
+<button class="btn p-0" {% if page.stock != 'Tersedia' %}title="Stok Habis" disabled{% else %}{% endif %}>
 <a id="item_add" type="button"class="btn btn-primary item_add" href="javascript:;"> Add to Cart </a>
+</button>
 </div>
                </div>
         </div>

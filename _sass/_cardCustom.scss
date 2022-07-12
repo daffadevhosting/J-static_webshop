@@ -8,7 +8,23 @@
         width: 100%;
         height: 85%;
         position: absolute;
-        top: 0;}
+        top: 0;
+    }
+        .stock_habis {
+                    position: absolute;
+                    background-color: #00000040;
+                    border-radius: 50%;
+                    padding: 28px 0;
+                    width: 80px;
+                    height: 80px;
+                    text-align: center;
+                    z-index: 1;}
+        .stock_habis::before {content: 'HABIS';color: $white;font-weight: bold;font-family: system-ui;}
+        .stock_habis:hover {
+                    background-color: #00000040;
+                    border-radius: 0;
+                    width: 100%;
+                    height: 100%;}
 }
 .card-body {
     flex: 1 1 auto;

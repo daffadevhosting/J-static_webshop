@@ -84,5 +84,11 @@ a {text-decoration: none;}
 .flex_items_center {
     display: flex;
     align-items: center;
-    grid-gap: 0 4px;}
+    grid-gap: 0 4px;
+}
+
+.ja_center {
+    justify-content: center;
+    align-items: center;
+}
 

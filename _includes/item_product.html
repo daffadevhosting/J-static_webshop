@@ -1,15 +1,16 @@
     <div class="col">
-        <div class="card shadow-sm">
+        <div class="card ja_center shadow-sm">
             <a href="{{post.url}}">
           <img class="img-fluid lazyimg rounded" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{site.baseurl}}{{ post.featured_image_path }}" alt="{{ post.title }}"/>
             <div class="overlays"></div>
             </a>
-            <div class="card-body bg-light">
+            <div class="card-body bg-light" style="width:-webkit-fill-available !important;">
               <p class="fs-6 fw-bold text-center">{{ post.title }}</p>
             <span class="price_star flex_items_between">
               <p class="mb-0 fs-6 text-danger">Rp. {{ post.price }}</p>
               <p class="mb-0 fs-6"><i class="fa-solid fa-star text-warning"></i> 5.0</p>
             </span>
             </div>
+        {% if post.stock != 'Tersedia' %}<div class="stock_habis"></div>{% else %}{% endif %}
         </div>
     </div>

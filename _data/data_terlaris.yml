@@ -2,18 +2,22 @@
   img: /images/products/elephant/cream.jpg
   title: Bumble the Elephant
   harga: '14.000'
+  stock: 
 
 - url: /products/lion
   img: /images/products/lion/blue.jpg
   title: Scar the Lion
   harga: '15.000'
+  stock: 
 
 - url: /products/giraffe
   img: /images/products/giraffe/green.jpg
   title: Gerald the Giraffe
   harga: '11.000'
+  stock: Tersedia
 
 - url: /products/tiger
   img: /images/products/tiger/cream.jpg
   title: Gavin the Tiger
   harga: '6.000'
+  stock: 
