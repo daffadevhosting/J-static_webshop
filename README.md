@@ -12,7 +12,7 @@ Instal dependensi dengan [Bundler](http://bundler.io/)
 ```shell
 $ npm init
 
-$ npm i bootstrap gulp sass gullp-sass gulp-clean-sass --save-dev
+$ npm i bootstrap gulp sass gulp-sass gulp-clean-css --save-dev
 
 $ bundle install
 ```
