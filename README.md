@@ -3,7 +3,7 @@
 J-static adalah website Online Shop berbasis Jekyll yang dibuat dengan simpleCart(js) versi IDR (Indonesia Rupiah), dengan checkout form langsung melalui *WhatsApp / *Telegram.
 
 Repo: https://github.com/daffadevhosting/J-static_webshop.git<br>
-Demo: https://j-store.pages.dev/
+Demo: https://j-static-webshop.pages.dev/
 
 dibangun dengan Jekyll v4.2.2 & Bootstrap v5.2
 
