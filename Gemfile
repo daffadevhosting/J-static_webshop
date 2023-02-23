@@ -12,6 +12,7 @@ group :jekyll_plugins do
     gem 'jekyll-seo-tag'
     gem 'jekyll-archives'
     gem 'jekyll-figure'
+    gem 'jekyll-dotenv'
     gem 'bootstrap'
     gem 'kramdown'
     gem 'rouge'

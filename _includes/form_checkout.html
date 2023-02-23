@@ -1,0 +1,139 @@
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+  function onSubmit(token) {
+    document.getElementById("whatsapp-order").submit();
+  }
+</script>
+
+<div class="card_box">
+     <div id="user-signed-in" class="userBox">
+       <h2>Welcome, <span id="user-display-name"></span></h2>
+       <p>Your email address is <span id="user-email"></span></p>
+       <button class="btn_logout" id="sign-out-button">Sign out</button>
+     </div></div>
+<div class="card">
+ <div class="card-header justify-content-center">
+   <h3 class="text-muted">{{page.title}}</h3><br/><span class="badge text-danger">isi semua data dibawah.</span><div class="float-end">Total Belanja: <span class="text-success fw-bold simpleCart_total"></span></div>
+ </div>
+<div class="card-body">
+<form class="data-form validate-form mt-3" id="whatsapp-order">
+<input class="order no_whatsapp" id="AdminToko" value="{{site.adminWa}}" type="hidden"/>
+<div class="row">
+     <section class="col-sm-6">
+<div class="form-group">
+ <label class="control-label">Nama Lengkap</label>
+ <input id="nama" type="text" class="form-control mb-2 nama wajib" placeholder="Nama Lengkap">
+</div>
+     </section>
+
+     <section class="col-sm-6">
+<div class="form-group">
+ <label class="control-label">Nomor WhatsApp</label>
+ <input id="nomor" type="number" min="11" class="form-control mb-2 nomor wajib" placeholder="Nomor WhatsApp">
+</div>
+     </section>
+</div>
+<div class="row">
+     <section class="col-sm-6">
+<div class="form-group">
+ <label class="control-label">Alamat Email</label>
+ <input id="email" type="email" class="form-control mb-2 email wajib" placeholder="Alamat E-mail">
+</div>
+     </section>
+
+     <section class="col-sm-6">
+<div class="form-group">
+ <label class="control-label">Kurir</label>
+         <select class="form-select mb-2 informasi wajib" value="J%26T Express" placeholder="Pilih Kurir " interface="action-sheet">
+           <option value="J%26T Express">J&amp;T Express</option>
+           <option value="JNE Express">JNE Express</option>
+           <option value="*Grab Express">*GrabExpress</option>
+           <option value="*GoSend">*GoSend</option>
+         </select>
+     </section>
+</div>
+
+<div class="row">
+<section class="col-sm-6">
+<div class="form-group">
+ <label class="control-label">Alamat Pengiriman</label>
+ <textarea id="alamat" class="form-control mb-2 alamat wajib" rows="5" placeholder="Alamat Rumah"></textarea>
+</div>
+     </section>
+
+     <section class="col-sm-6">
+<div class="form-group">
+ <label class="control-label"></label>
+ <input id="kota" class="form-control mb-2 kota wajib" placeholder="Kota">
+ <input id="provinsi" class="form-control mb-2 provinsi wajib" placeholder="Provinsi">
+ <input id="kodepos" class="form-control mb-2 kodepos wajib" placeholder="Kode Pos">
+</div>
+</section>
+</div>
+<a class="button mt-2 order" id='order'><button type="button" class="btn btn-success btn-sm">Send Order</button></a>
+</form>
+   </div>
+</div>
+<style>.grecaptcha-badge{z-index:1;float:left}</style>
+<div class="g-recaptcha"
+    data-sitekey="{{site.sitekey}}"
+    data-callback="onSubmit"
+    data-size="invisible">
+</div>
+<script>grecaptcha.execute();</script>
+
+<style>
+     .card_box {
+       border: 1px solid #919191;
+       border-radius: 8px;
+       margin: 0 auto 20px ;
+       padding: 10px;
+       box-shadow: 0 0 20px -2px #919191;
+       background: linear-gradient(45deg, #ffc107a3, transparent);
+     }
+     .btn_logout {
+    border: none;
+    border-radius: 5px;
+    background: blue;
+    color: #fff;
+}
+</style>
+     <script type="module">
+       const firebaseConfig = {
+           apiKey: "{{ site.env.API_KEY }}",
+           authDomain: "{{ site.env.AUTH_DOMAIN }}",
+           databaseURL: "{{ site.env.DATABASE_URL }}",
+           projectId: "{{ site.env.PROJECT_ID }}",
+           storageBucket: "{{ site.env.STORAGE_BUCKET }}",
+           messagingSenderId: "{{ site.env.SENDER_ID }}",
+           appId: "{{ site.env.APP_ID }}",
+           measurementId: "{{ site.env.MEASUREMENT_ID }}"
+       };
+       firebase.initializeApp(firebaseConfig);
+     
+       const auth = firebase.auth();
+     
+       const userSignedOutDiv = document.getElementById('user-signed-out');
+       const userSignedInDiv = document.getElementById('user-signed-in');
+       const userDisplayName = document.getElementById('user-display-name');
+       const userEmail = document.getElementById('user-email');
+       const signOutButton = document.getElementById('sign-out-button');
+     
+       function toggleUI() {
+         if (auth.currentUser) {
+           userDisplayName.textContent = auth.currentUser.displayName;
+           userEmail.textContent = auth.currentUser.email;
+         } else {
+           location.href = "{{site.baseurl}}/signin";
+         }
+       }
+       signOutButton.addEventListener('click', () => {
+         auth.signOut();
+           location.href = "{{site.baseurl}}/";
+       });
+     
+       auth.onAuthStateChanged(user => {
+         toggleUI();
+       });
+     </script>
