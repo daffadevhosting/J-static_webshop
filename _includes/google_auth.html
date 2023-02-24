@@ -5,17 +5,19 @@
   }
 .box_card {
     display: flex;
-    background: linear-gradient(45deg, #ff9800, #9c27b0, #03a9f4), #e91e63;
     justify-content: center;
     align-items: center;
     text-align: center;
-    border: 1px solid #919191;
     border-radius: 8px;
-    box-shadow: 0 0 15px -2px #919191;
     max-width: 360px;
     min-height: 68vh;
     margin: 30px auto;
     color: black;
+}
+@media screen and (max-width: 768px) {
+  .box_card {
+    min-height: 74vh;
+  }
 }
 h2 {
   font-size: 14px;
@@ -54,35 +56,14 @@ transition: 0.5s;
   </div></div></div>
   <script type="module">
     const firebaseConfig = {
-          apiKey: "{{ site.env.API_KEY }}",
-          authDomain: "{{ site.env.AUTH_DOMAIN }}",
-          databaseURL: "{{ site.env.DATABASE_URL }}",
-          projectId: "{{ site.env.PROJECT_ID }}",
-          storageBucket: "{{ site.env.STORAGE_BUCKET }}",
-          messagingSenderId: "{{ site.env.SENDER_ID }}",
-          appId: "{{ site.env.APP_ID }}",
-          measurementId: "{{ site.env.MEASUREMENT_ID }}"
-    };
-    firebase.initializeApp(firebaseConfig);
-
-    const auth = firebase.auth();
-
-    const userSignedInDiv = document.getElementById('user-signed-in');
-    const signInButton = document.getElementById('sign-in-button');
-
-    function toggleUI() {
-      if (auth.currentUser) {
-        location.href = "{{site.baseurl}}/checkout";
-      } else {
-      }
-    }
-
-    signInButton.addEventListener('click', () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider);
-    });
-
-    auth.onAuthStateChanged(user => {
-      toggleUI();
-    });
+    apiKey: "{{ site.env.API_KEY }}",
+    authDomain: "{{ site.env.AUTH_DOMAIN }}",
+    databaseURL: "{{ site.env.DATABASE_URL }}",
+    projectId: "{{ site.env.PROJECT_ID }}",
+    storageBucket: "{{ site.env.STORAGE_BUCKET }}",
+    messagingSenderId: "{{ site.env.SENDER_ID }}",
+    appId: "{{ site.env.APP_ID }}",
+    measurementId: "{{ site.env.MEASUREMENT_ID }}"
+    };firebase.initializeApp(firebaseConfig);const auth=firebase.auth();const userSignedInDiv=document.getElementById('user-signed-in');const signInButton=document.getElementById('sign-in-button');function toggleUI(){if(auth.currentUser){location.href="{{site.baseurl}}/checkout"}else{}}
+signInButton.addEventListener('click',()=>{const provider=new firebase.auth.GoogleAuthProvider();auth.signInWithPopup(provider)});auth.onAuthStateChanged(user=>{toggleUI()})
   </script>
