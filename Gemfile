@@ -5,7 +5,7 @@ source "https://rubygems.org"
 
 group :jekyll_plugins do
     gem 'jekyll-timeago'
-    gem "jekyll-compress-html"
+    gem "jekyll-minify-html"
     gem 'jekyll-feed'
     gem 'jekyll-sitemap'
     gem 'jekyll-paginate'
