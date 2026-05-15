@@ -1,5 +1,5 @@
 port: 8008
-url: "https://j-store.pages.dev"
+url: "https://j-static-webshop.pages.dev"
 baseurl: ""
 title: "J-static"
 description: "A static OnLine shop base on jekyll & simpleCart, with whatsapp checkout form."
