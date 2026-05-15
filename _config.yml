@@ -72,5 +72,10 @@ jekyll-archives:
 
 compress_html:
   clippings: all
+  comments: all
+  endings: all
+  startings: []
+  blanklines: false
+  profile: false
    
 exclude: [lib, config.rb, .sass-cache, .env, .env_local, Capfile, config, log, Rakefile, Rakefile.rb, tmp, Gemfile, Gemfile.lock, README.md, LICENSE.md, node_modules, package.json, package-lock.json]
