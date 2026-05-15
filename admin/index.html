@@ -1,0 +1,284 @@
+---
+layout: default
+title: Admin Dashboard
+permalink: /admin/
+---
+
+<!-- DEBUG MARKER: v2 -->
+<div id="loading-screen" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3">Checking authentication status...</p>
+</div>
+
+<div id="admin-dashboard" class="py-4" style="display: none !important;">
+    <div class="container">
+        <div class="alert alert-info py-2 small">
+            <i class="fas fa-info-circle me-2"></i> Logged in as: <span id="admin-email-display">...</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0">Manage Products</h2>
+                <p class="text-muted small">Manage your store products directly from here.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#productModal" onclick="prepareAdd()">
+                    <i class="fas fa-plus me-2"></i> Add Product
+                </button>
+                <button class="btn btn-outline-danger rounded-pill px-4" id="sign-out-button">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Product</th>
+                            <th>Code</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-list">
+                        <tr><td colspan="5" class="text-center py-5">Fetching products...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pb-0 ps-4 pt-4">
+                <h5 class="modal-title fw-bold" id="modalTitle">Add New Product</h5>
+                <button type="button" class="btn-close me-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="product-form">
+                    <input type="hidden" id="edit-slug">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Title</label>
+                            <input type="text" id="p-title" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Product Code</label>
+                            <input type="text" id="p-code" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Price (IDR)</label>
+                            <input type="text" id="p-price" class="form-control" required placeholder="5.000">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Stock Status</label>
+                            <select id="p-stock" class="form-select">
+                                <option value="Tersedia">Tersedia</option>
+                                <option value="">Habis</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Featured Image Path</label>
+                            <input type="text" id="p-img" class="form-control" required placeholder="/images/products/example.jpg">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Description</label>
+                            <textarea id="p-desc" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Content (Markdown)</label>
+                            <textarea id="p-content" class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0 pe-4 pb-4">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-dark rounded-pill px-4" id="save-button" onclick="saveProduct()">Save Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <style>
+        footer, .footer-widgets {
+            display: none !important;
+            visibility: hidden !important;
+        }
+    </style>
+<script>
+  // Script Kasar untuk Debugging
+  console.log("=== ADMIN SCRIPT v2 STARTING ===");
+
+  const firebaseConfig = {
+    apiKey: "{{ site.env.API_KEY }}",
+    authDomain: "{{ site.env.AUTH_DOMAIN }}",
+    projectId: "{{ site.env.PROJECT_ID }}",
+    storageBucket: "{{ site.env.STORAGE_BUCKET }}",
+    messagingSenderId: "{{ site.env.SENDER_ID }}",
+    appId: "{{ site.env.APP_ID }}"
+  };
+
+  function initAdmin() {
+    console.log("Initializing Admin UI...");
+    
+    if (typeof firebase === 'undefined') {
+        alert("Firebase ERROR: Script firebase tidak terdeteksi. Cek koneksi internet.");
+        return;
+    }
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    
+    const auth = firebase.auth();
+    const WORKER_URL = "{{ site.worker_url }}";
+    const API_SECRET = "{{ site.api_secret }}";
+
+    auth.onAuthStateChanged(function(user) {
+      console.log("Firebase Auth State:", user ? user.email : "GAK ADA USER");
+      
+      if (!user) {
+        console.warn("Unauthorized! Redirecting to login...");
+        window.location.href = "{{ '/admin/login' | relative_url }}";
+        return;
+      }
+
+      // Berhasil Login
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('admin-email-display').textContent = user.email;
+      
+      const dashboard = document.getElementById('admin-dashboard');
+      dashboard.style.setProperty('display', 'block', 'important');
+      
+      console.log("Dashboard unlocked for", user.email);
+      window.loadProducts();
+    });
+
+    document.getElementById('sign-out-button').addEventListener('click', function() {
+      auth.signOut();
+    });
+
+    window.loadProducts = async function() {
+      console.log("Fetching products from Worker...");
+      const list = document.getElementById('product-list');
+      try {
+        const res = await fetch(WORKER_URL + '/products', {
+          headers: { 'Authorization': 'Bearer ' + API_SECRET }
+        });
+        const products = await res.json();
+        
+        if (products.error) throw new Error(products.error);
+
+        list.innerHTML = products.map(function(p) {
+          return '<tr>' +
+            '<td class="ps-4"><div class="d-flex align-items-center">' +
+            '<img src="' + p.img + '" width="40" height="40" class="rounded-3 me-3 object-fit-cover shadow-sm">' +
+            '<span class="fw-bold">' + p.title + '</span></div></td>' +
+            '<td><code class="small text-muted">' + p.url.split('/').pop() + '</code></td>' +
+            '<td><span class="text-success fw-bold">Rp ' + p.harga + '</span></td>' +
+            '<td><span class="badge ' + (p.stock === 'Tersedia' ? 'bg-success' : 'bg-danger') + ' rounded-pill">' + (p.stock || 'Habis') + '</span></td>' +
+            '<td class="text-end pe-4">' +
+            '<button class="btn btn-sm btn-outline-dark me-1" onclick="editProduct(\'' + p.url.split('/').pop() + '\')"><i class="fas fa-edit"></i></button>' +
+            '<button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(\'' + p.url.split('/').pop() + '\')"><i class="fas fa-trash"></i></button>' +
+            '</td></tr>';
+        }).join('');
+      } catch (err) {
+        console.error("Worker fetch failed:", err);
+        list.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-5">Error: ' + err.message + '</td></tr>';
+      }
+    };
+
+    window.prepareAdd = function() {
+      document.getElementById('product-form').reset();
+      document.getElementById('edit-slug').value = '';
+      document.getElementById('modalTitle').textContent = 'Add New Product';
+    };
+
+    window.editProduct = async function(slug) {
+      console.log("Editing product:", slug);
+      try {
+        const res = await fetch(WORKER_URL + '/products/' + slug, {
+          headers: { 'Authorization': 'Bearer ' + API_SECRET }
+        });
+        const p = await res.json();
+        
+        document.getElementById('edit-slug').value = slug;
+        document.getElementById('p-title').value = p.title;
+        document.getElementById('p-code').value = p.code || '';
+        document.getElementById('p-price').value = p.price;
+        document.getElementById('p-stock').value = p.stock || '';
+        document.getElementById('p-img').value = p.featured_image_path;
+        document.getElementById('p-desc').value = p.description || '';
+        document.getElementById('p-content').value = p.content || '';
+        
+        document.getElementById('modalTitle').textContent = 'Edit Product';
+        new bootstrap.Modal(document.getElementById('productModal')).show();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    };
+
+    window.saveProduct = async function() {
+      const slug = document.getElementById('edit-slug').value;
+      const btn = document.getElementById('save-button');
+      
+      const data = {
+        title: document.getElementById('p-title').value,
+        code: document.getElementById('p-code').value,
+        price: document.getElementById('p-price').value,
+        stock: document.getElementById('p-stock').value,
+        featured_image_path: document.getElementById('p-img').value,
+        description: document.getElementById('p-desc').value,
+        content: document.getElementById('p-content').value,
+        categories: 'T-Shirt',
+        tags: 'Terbaru',
+        styles: [{ name: 'Default', color: '#000000', image_path: document.getElementById('p-img').value }],
+        sizes: ['Small', 'Medium', 'Large', 'XL']
+      };
+
+      btn.disabled = true;
+      try {
+        const method = slug ? 'PUT' : 'POST';
+        const url = slug ? WORKER_URL + '/products/' + slug : WORKER_URL + '/products';
+        const res = await fetch(url, {
+          method: method,
+          headers: { 'Authorization': 'Bearer ' + API_SECRET, 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Worker rejected the request');
+        bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+        window.loadProducts();
+      } catch (err) {
+        alert('Save Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    window.deleteProduct = async function(slug) {
+      if (!confirm('Hapus produk ' + slug + '?')) return;
+      try {
+        await fetch(WORKER_URL + '/products/' + slug, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + API_SECRET }
+        });
+        window.loadProducts();
+      } catch (err) {
+        alert('Delete Error: ' + err.message);
+      }
+    };
+  }
+
+  // Jalankan segera
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdmin);
+  } else {
+    initAdmin();
+  }
+</script>

@@ -81,3 +81,7 @@ compress_html:
   profile: false
 
 exclude: [lib, config.rb, .sass-cache, .env, .env_local, Capfile, config, log, Rakefile, Rakefile.rb, tmp, Gemfile, Gemfile.lock, README.md, LICENSE.md, node_modules, package.json, package-lock.json]
+
+# Admin API Config
+worker_url: "https://jekyll-admin-api.daffadev.workers.dev"
+api_secret: "VXNlciBzaG91bGQgc2V0IHRoaXMgaW4gX2NvbmZpZy55bWw="

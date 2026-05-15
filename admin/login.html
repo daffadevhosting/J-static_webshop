@@ -1,0 +1,102 @@
+---
+layout: default
+title: Admin Login
+permalink: /admin/login
+---
+
+<div class="admin-login-container py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-header bg-dark text-white text-center py-4 border-0 rounded-top-4">
+                        <h4 class="mb-0 fw-bold">Admin Dashboard</h4>
+                        <p class="small mb-0 text-muted">Please sign in to continue</p>
+                    </div>
+                    <div class="card-body p-5">
+                        <form id="login-form">
+                            <div class="mb-4">
+                                <label class="form-label fw-600 text-muted">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="fas fa-envelope text-muted"></i></span>
+                                    <input type="email" id="email" class="form-control bg-light border-0" placeholder="admin@example.com" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-600 text-muted">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="fas fa-lock text-muted"></i></span>
+                                    <input type="password" id="password" class="form-control bg-light border-0" placeholder="••••••••" required>
+                                </div>
+                            </div>
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-dark btn-lg rounded-3 py-3 fw-bold shadow-sm">
+                                    Sign In <i class="fas fa-sign-in-alt ms-2"></i>
+                                </button>
+                            </div>
+                            <div id="error-message" class="alert alert-danger d-none small"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        background-color: #f8f9fa;
+    }
+    .fw-600 { font-weight: 600; }
+    .input-group-text { border-radius: 0.5rem 0 0 0.5rem; }
+    .form-control { border-radius: 0 0.5rem 0.5rem 0; }
+    .btn-dark {
+        background: #2d3436;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-dark:hover {
+        background: #000;
+        transform: translateY(-2px);
+    }
+</style>
+
+<script type="module">
+  const firebaseConfig = {
+    apiKey: "{{ site.env.API_KEY }}",
+    authDomain: "{{ site.env.AUTH_DOMAIN }}",
+    projectId: "{{ site.env.PROJECT_ID }}",
+    storageBucket: "{{ site.env.STORAGE_BUCKET }}",
+    messagingSenderId: "{{ site.env.SENDER_ID }}",
+    appId: "{{ site.env.APP_ID }}"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('error-message');
+    
+    errorDiv.classList.add('d-none');
+    
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      window.location.href = "{{ '/admin/' | relative_url }}";
+    } catch (error) {
+      errorDiv.textContent = error.message;
+      errorDiv.classList.remove('d-none');
+    }
+  });
+
+  // Redirect if already logged in
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      window.location.href = "{{ '/admin/' | relative_url }}";
+    }
+  });
+</script>
