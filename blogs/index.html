@@ -1,0 +1,163 @@
+---
+layout: default
+title: Blog & Artikel
+sidebar_option: no-sidebar
+permalink: /blogs/
+---
+
+<div class="blog-index-wrapper py-5">
+    <div class="container">
+        <!-- Section Header -->
+        <div class="blog-header text-center mb-5">
+            <h1 class="display-4 fw-bold mb-3">J-Static Blog</h1>
+            <p class="text-muted lead">Temukan artikel menarik seputar gaya hidup, teknologi, dan wawasan unik lainnya.</p>
+            <div class="header-line mx-auto"></div>
+        </div>
+
+        {% assign featured_post = site.blogs | last %}
+        {% if featured_post %}
+        <!-- Featured Post -->
+        <div class="featured-post-card mb-5">
+            <div class="row g-0 align-items-center">
+                <div class="col-lg-7">
+                    <div class="featured-img-wrapper">
+                        <img src="{{ featured_post.image_path | relative_url }}" alt="{{ featured_post.title }}" class="img-fluid rounded-start">
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="featured-content p-4 p-lg-5">
+                        <span class="badge bg-primary mb-3">LATEST POST</span>
+                        <h2 class="fw-bold mb-3"><a href="{{ featured_post.url | relative_url }}" class="text-dark text-decoration-none">{{ featured_post.title }}</a></h2>
+                        <p class="text-muted mb-4">{{ featured_post.description | truncate: 160 }}</p>
+                        <a href="{{ featured_post.url | relative_url }}" class="btn btn-outline-dark rounded-pill px-4">Baca Selengkapnya</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Blog Grid -->
+        <div class="row g-4">
+            {% for blog in site.blogs reversed %}
+            {% if blog.url != featured_post.url %}
+            <div class="col-md-6 col-lg-4">
+                <article class="blog-card h-100">
+                    <div class="blog-card-img">
+                        <img src="{{ blog.image_path | relative_url }}" alt="{{ blog.title }}" class="img-fluid">
+                        <div class="blog-date">
+                            <span class="day">{{ blog.date | date: "%d" }}</span>
+                            <span class="month">{{ blog.date | date: "%b" }}</span>
+                        </div>
+                    </div>
+                    <div class="blog-card-body p-4">
+                        <h3 class="h5 fw-bold mb-3"><a href="{{ blog.url | relative_url }}" class="text-dark text-decoration-none">{{ blog.title }}</a></h3>
+                        <p class="text-muted small mb-4">{{ blog.description | truncate: 100 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <a href="{{ blog.url | relative_url }}" class="read-more-link">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .blog-index-wrapper {
+        background-color: #fcfcfc;
+    }
+    .header-line {
+        width: 60px;
+        height: 4px;
+        background: #007bff;
+        border-radius: 2px;
+    }
+    
+    /* Featured Post Card */
+    .featured-post-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    .featured-img-wrapper img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    /* Blog Card Styles */
+    .blog-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    .blog-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    }
+    .blog-card-img {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+    }
+    .blog-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .blog-card:hover .blog-card-img img {
+        transform: scale(1.1);
+    }
+    .blog-date {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: white;
+        padding: 8px 12px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+    }
+    .blog-date .day {
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #333;
+    }
+    .blog-date .month {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: #6610f2;
+        font-weight: 700;
+    }
+
+    .read-more-link {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+    .read-more-link:hover {
+        color: #0056b3;
+        letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 991px) {
+        .featured-img-wrapper img {
+            height: 300px;
+        }
+    }
+</style>

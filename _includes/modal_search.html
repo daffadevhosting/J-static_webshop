@@ -1,17 +1,111 @@
 <div class="modal search fade" id="search-modal" data-bs-backdrop="static">
     <button type="button" class="btn-close-light" data-bs-dismiss="modal"></button>
     <div class="modal-dialog">
-        <div class="modal-content" style="top:45px;">
-            <div class="modal-body">
-
-                <form class="forms" id="gh-search-input" method="get" target="_top">
-                    <div class="input-group">
-                        <input type="search" class="search-input form-control" placeholder="Apa yang kamu cari..?"
-                            id="search-input" name="q" />
-                    </div>
-                </form>
-                <div id="results-container"></div>
+        <div class="modal-content">
+            <div class="modal-body p-4">
+                <div class="search-header mb-4">
+                    <h5 class="text-center fw-bold">Cari Produk</h5>
+                    <p class="text-center text-white small">Temukan produk favoritmu di sini</p>
+                </div>
+                <div class="input-group search-box mb-3">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input type="search" class="form-control border-start-0 ps-0" placeholder="Ketik nama produk..." id="search-input" autocomplete="off">
+                </div>
+                <div id="results-container" class="list-group list-group-flush mt-3"></div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    #search-modal .modal-content {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+        top: 60px;
+    }
+    .search-box {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .search-box input:focus {
+        box-shadow: none;
+        border-color: #dee2e6;
+    }
+    #results-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .search-result-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        transition: all 0.2s ease;
+        text-decoration: none !important;
+        border: 1px solid transparent;
+    }
+    .search-result-item:hover {
+        background-color: #f8f9fa;
+        border-color: #eee;
+        transform: translateX(5px);
+    }
+    .search-result-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+    .search-result-info {
+        flex-grow: 1;
+    }
+    .search-result-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 2px;
+        display: block;
+    }
+    .search-result-price {
+        font-size: 0.85rem;
+        color: #28a745;
+        font-weight: 700;
+    }
+    #results-container:empty::before {
+        content: 'Mulai mengetik untuk mencari...';
+        display: block;
+        text-align: center;
+        padding: 20px;
+        color: #aaa;
+        font-size: 0.9rem;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof SimpleJekyllSearch === 'function') {
+            SimpleJekyllSearch({
+                searchInput: document.getElementById('search-input'),
+                resultsContainer: document.getElementById('results-container'),
+                json: '{{ "/search.json" | relative_url }}',
+                searchResultTemplate: `
+                    <a href="{url}" class="search-result-item">
+                        <img src="{image}" class="search-result-image" alt="{title}">
+                        <div class="search-result-info">
+                            <span class="search-result-title">{title}</span>
+                            <span class="search-result-price">Rp {price}</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-muted small"></i>
+                    </a>
+                `,
+                noResultsText: '<p class="text-center p-3 text-muted">Produk tidak ditemukan...</p>',
+                limit: 10,
+                fuzzy: false
+            });
+        }
+    });
+</script>

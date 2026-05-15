@@ -1,15 +1,15 @@
 	<script src="{{ '/assets/js/lazyload.js' | relative_url }}"></script>
-    <script src="{{ '/assets/js/simpleCart.js?version=2.0.1' | relative_url }}"></script>
-    <script async src="{{ '/assets/js/formOrder.js?version=1.0.1' | relative_url }}"></script>
-    <script async src="{{ '/assets/js/mainForm.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/j-static_simpleCart.js?version=2.0.1' | relative_url }}"></script>
+    <script async src="{{ '/assets/js/j-static_formOrder.js?version=1.0.1' | relative_url }}"></script>
+    <script async src="{{ '/assets/js/j-static_mainForm.js' | relative_url }}"></script>
     <script async src="{{ '/assets/js/sweetalert.min.js' | relative_url }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
     {% if page.url contains '/products/' %}
-      <script async src="{{ '/assets/js/add-to-cart.js' | relative_url }}"></script>
-      <script async src="{{ '/assets/js/app.js?v2.0.1' | relative_url }}"></script>
+      <script async src="{{ '/assets/js/j-static_add-to-cart.js' | relative_url }}"></script>
+      <script async src="{{ '/assets/js/j-static_app.js?v2.0.1' | relative_url }}"></script>
     {% endif %}
     {% if page.url == '/checkout/' %}
-      <script async src="{{ '/assets/js/checkout.js' | relative_url }}"></script>
+      <script async src="{{ '/assets/js/j-static_checkout.js' | relative_url }}"></script>
     {% endif %}
 	<script src="{{ '/assets/js/popper/umd/popper.min.js' | relative_url }}"></script>
 	<script src="{{ '/assets/js/bootstrap/bootstrap.bundle.min.js' | relative_url }}"></script>

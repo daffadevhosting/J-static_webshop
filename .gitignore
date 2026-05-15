@@ -5,6 +5,11 @@ _styles
 .bundle
 .env
 .sass-cache
+.jekyll-cache
+vendor/bundle
+vendor/cache
+vendor/gems
+vendor/ruby
 Gemfile.lock
 node_modules
 package-lock.json

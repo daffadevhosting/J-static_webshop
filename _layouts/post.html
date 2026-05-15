@@ -1,5 +1,8 @@
 ---
 layout: default
+title: {{ page.title }}
+description: {{ page.description }}
+permalink: {{ page.url }}
 ---
 
 {% include breadcrumb.html %}
@@ -11,7 +14,7 @@ layout: default
             {% for style in page.styles %}
           		<div id="product-{{ forloop.index }}" class="card ja_center border-0" {% unless forloop.first %}style="display: none"{% endunless %}>
     <img class="img-fluid lazyimg {% if forloop.first %}item_thumb{% endif %}" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{ style.image_path }}" width="520" height="500" alt="{{ post.title }}" itemprop="image">
-            {% if page.stock != 'Tersedia' %}<div class="stock_habis"></div>{% else %}{% endif %}
+            {% if page.stock != 'Tersedia' %}<div class="stock_habis"><span>SOLD OUT</span></div>{% else %}{% endif %}
           		</div>
           	{% endfor %}
           </div>
@@ -56,9 +59,15 @@ layout: default
                  </div>
                </div>
 <div class="col-md-6 d-flex justify-content-end float-end" style="padding: 0.375rem 0.75rem;">
-<button class="btn p-0" {% if page.stock != 'Tersedia' %}title="Stok Habis" disabled{% else %}{% endif %}>
-<a id="item_add" type="button"class="btn btn-primary item_add" href="javascript:;"> Add to Cart </a>
+{% if page.stock != 'Tersedia' %}
+<button class="btn btn-secondary w-100" disabled title="Stok Habis">
+    <i class="fas fa-exclamation-triangle me-1"></i> Stok Habis
 </button>
+{% else %}
+<a id="item_add" type="button" class="btn btn-primary item_add w-100" href="javascript:;">
+    <i class="fas fa-cart-plus me-1"></i> Add to Cart
+</a>
+{% endif %}
 </div>
                </div>
         </div>

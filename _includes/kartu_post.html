@@ -1,3 +1,11 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center py-2 my-2">
+    <div class="col-md-4 d-flex align-items-center">
+      <span class="text-muted">Blog Post</span>
+    </div>
+    <div class="col-md-4 d-flex justify-content-end">
+      <a class="btn btn-sm btn-dark" href="{{ '/blogs' | relative_url }}" role="button">Lihat Blog</a>
+    </div>
+</div>
 <div class="row">
 {% for blog in site.blogs limit:2 %}
   <div class="col-sm-6">
@@ -8,7 +16,7 @@
  <small class="card-text text-white">{{blog.description}}</small>
 </div>
   <div class="card-img-overlay middle">
-    <a type="button" class="btn btn-sm btn-dark" href="{{site.baseurl}}{{blog.url}}">Baca Artikel</a>
+    <a type="button" class="btn btn-sm btn-dark" href="{{ blog.url | relative_url }}">Baca Artikel</a>
   </div>
     </div>
   </div>

@@ -9,8 +9,8 @@
 <div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
 {% for item in site.data.data_terlaris %}
     <div class="col">
-        <div class="card ja_center shadow-sm">
-            <a href="{{item.url}}">
+        <div class="card ja_center shadow-sm {% if item.stock != 'Tersedia' %}product-out-of-stock{% endif %}">
+            <a href="{{item.url}}" {% if item.stock != 'Tersedia' %}onclick="return false;" class="disabled-link"{% endif %}>
           <img class="img-fluid lazyimg rounded" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{site.baseurl}}{{ item.img }}" alt="{{ item.title }}"/>
             <div class="overlays"></div>
             </a>
@@ -21,7 +21,7 @@
               <p class="mb-0 fs-6"><i class="fa-solid fa-star text-warning"></i> 5.0</p>
             </span>
             </div>
-        {% if item.stock != 'Tersedia' %}<div class="stock_habis"></div>{% else %}{% endif %}
+        {% if item.stock != 'Tersedia' %}<div class="stock_habis"><span>SOLD OUT</span></div>{% else %}{% endif %}
         </div>
     </div>
 {% endfor %}

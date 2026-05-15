@@ -1,6 +1,6 @@
     <div class="col">
-        <div class="card ja_center shadow-sm">
-            <a href="{{post.url}}">
+        <div class="card ja_center shadow-sm {% if post.stock != 'Tersedia' %}product-out-of-stock{% endif %}">
+            <a href="{{post.url}}" {% if post.stock != 'Tersedia' %}onclick="return false;" class="disabled-link"{% endif %}>
           <img class="img-fluid lazyimg rounded" src="{{site.baseurl}}/images/logo/placeholder.png" data-src="{{site.baseurl}}{{ post.featured_image_path }}" alt="{{ post.title }}"/>
             <div class="overlays"></div>
             </a>
@@ -11,6 +11,6 @@
               <p class="mb-0 fs-6"><i class="fa-solid fa-star text-warning"></i> 5.0</p>
             </span>
             </div>
-        {% if post.stock != 'Tersedia' %}<div class="stock_habis"></div>{% else %}{% endif %}
+        {% if post.stock != 'Tersedia' %}<div class="stock_habis"><span>SOLD OUT</span></div>{% else %}{% endif %}
         </div>
     </div>

@@ -1,10 +1,11 @@
+port: 8008
 url: "https://j-store.pages.dev"
 baseurl: ""
 title: "J-static"
 description: "A static OnLine shop base on jekyll & simpleCart, with whatsapp checkout form."
 avatar: /images/logo/cart-icon.webp
 
-dev: unangning_EU
+dev: nDang
 adminWa: 081386267897
 sitekey: 6LdPL-wZAAAAAAzUvjEWXHGLAgKL78wBzB1IR8t7
 
@@ -14,7 +15,6 @@ maps: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.192389487675!2d
 
 # Plugins
 plugins:
- # - jekyll-minify-html
   - jekyll-paginate
   - jekyll-timeago
   - jekyll-sitemap

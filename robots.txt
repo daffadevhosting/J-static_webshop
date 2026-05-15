@@ -1,1 +1,1 @@
-Sitemap: https://j-store.pages.dev/sitemap.xml
+Sitemap: {{ site.url }}{{ site.baseurl }}/sitemap.xml

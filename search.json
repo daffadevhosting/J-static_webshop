@@ -2,13 +2,12 @@
 layout: null
 ---
 [
-  {% for post in site.posts %}
+  {% for product in site.data.data_product %}
     {
-      "title"    : "{{ post.title | escape }}",
-      "category" : "{{ post.category }}",
-      "tags"     : "{{ post.tags | join: ', ' }}",
-      "url"      : "{{ site.baseurl }}{{ post.url }}",
-      "date"     : "{{ post.date }}"
-    } {% unless forloop.last %},{% endunless %}
+      "title"    : "{{ product.title | escape }}",
+      "url"      : "{{ product.url | relative_url }}",
+      "image"    : "{{ product.img | relative_url }}",
+      "price"    : "{{ product.harga }}"
+    }{% unless forloop.last %},{% endunless %}
   {% endfor %}
 ]

@@ -1,0 +1,24 @@
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title text-success" id="offcanvasCartLabel">Items : <span class="simpleCart_quantity"></span></h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        {% include keranjang.html %}
+<div class="cart-sidebar-footer checkout-layout">
+<div class="cart-store-details">
+<div class=" d-flex mt-2 flex-wrap justify-content-between">
+<p class="text-white">Total Produk <strong class="float-right">*<span class="simpleCart_total"></span></strong></p>
+<p class="mb-5"> <strong class="float-right fw-light fs-12 text-danger">*Belum Termasuk Ongkir</strong></p>
+</div>
+<button onclick="checkOut()" class="btn btn-success btn-lg btn-block d-flex flex-wrap justify-content-between text-left" type="button"><span class="float-left"><i class="fa fa-cart-outline"></i> Proceed to Checkout </span><span class="float-right"><strong><span class="simpleCart_total"></span></strong> <span class="fa fa-chevron-right"></span></span></button>
+</div>
+</div>
+<script>
+function checkOut() {
+  location.replace("/checkout")
+}
+</script>
+      </div>
+    </div>
