@@ -14,7 +14,7 @@ maps: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.192389487675!2d
 
 # Plugins
 plugins:
-  - jekyll-minify-html
+  - jekyll-compress-html
   - jekyll-paginate
   - jekyll-timeago
   - jekyll-sitemap
