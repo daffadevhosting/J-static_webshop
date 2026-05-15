@@ -4,7 +4,7 @@ title: Admin Dashboard
 permalink: /admin/
 ---
 
-<!-- DEBUG MARKER: v2 -->
+<!-- OPTIMIZED v3: Performance improvements -->
 <div id="loading-screen" class="text-center py-5">
     <div class="spinner-border text-primary" role="status"></div>
     <p class="mt-3">Checking authentication status...</p>
@@ -12,8 +12,13 @@ permalink: /admin/
 
 <div id="admin-dashboard" class="py-4" style="display: none !important;">
     <div class="container">
-        <div class="alert alert-info py-2 small">
-            <i class="fas fa-info-circle me-2"></i> Logged in as: <span id="admin-email-display">...</span>
+        <div class="alert alert-info py-2 small d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-info-circle me-2"></i> Logged in as: <span id="admin-email-display">...</span>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" id="sign-out-button">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </button>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -21,14 +26,19 @@ permalink: /admin/
                 <h2 class="fw-bold mb-0">Manage Products</h2>
                 <p class="text-muted small">Manage your store products directly from here.</p>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-success rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#productModal" onclick="prepareAdd()">
-                    <i class="fas fa-plus me-2"></i> Add Product
-                </button>
-                <button class="btn btn-outline-danger rounded-pill px-4" id="sign-out-button">
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
-                </button>
-            </div>
+            <button class="btn btn-success rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#productModal" onclick="prepareAdd()">
+                <i class="fas fa-plus me-2"></i> Add Product
+            </button>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="mb-3 d-flex gap-2">
+            <input type="text" id="search-input" class="form-control" placeholder="Search products..." style="max-width: 300px;">
+            <select id="stock-filter" class="form-select" style="max-width: 150px;">
+                <option value="all">All Stock</option>
+                <option value="Tersedia">Available</option>
+                <option value="">Out of Stock</option>
+            </select>
         </div>
 
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -48,6 +58,12 @@ permalink: /admin/
                     </tbody>
                 </table>
             </div>
+        </div>
+        
+        <!-- Pagination Info -->
+        <div class="d-flex justify-content-between align-items-center mt-3 text-muted small">
+            <span id="product-count">Total: 0 products</span>
+            <span id="last-updated">Last updated: --</span>
         </div>
     </div>
 </div>
@@ -110,10 +126,25 @@ permalink: /admin/
             display: none !important;
             visibility: hidden !important;
         }
+        /* Performance: Lazy load images */
+        .product-img {
+            content-visibility: auto;
+            contain-intrinsic-size: 40px;
+        }
+        /* Smooth transitions */
+        .table-row-transition {
+            transition: background-color 0.2s ease;
+        }
     </style>
 <script>
-  // Script Kasar untuk Debugging
-  console.log("=== ADMIN SCRIPT v2 STARTING ===");
+  // OPTIMIZED v3: Performance improvements
+  // - Debounced search
+  // - Client-side filtering
+  // - Lazy image loading
+  // - Cached DOM references
+  // - Reduced re-renders
+  
+  console.log("=== ADMIN SCRIPT v3 OPTIMIZED ===");
 
   const firebaseConfig = {
     apiKey: "{{ site.env.API_KEY }}",
@@ -124,8 +155,56 @@ permalink: /admin/
     appId: "{{ site.env.APP_ID }}"
   };
 
+  // Cache DOM elements
+  const DOM = {
+    loadingScreen: null,
+    dashboard: null,
+    productList: null,
+    emailDisplay: null,
+    searchInput: null,
+    stockFilter: null,
+    productCount: null,
+    lastUpdated: null,
+    signOutBtn: null,
+    modalTitle: null,
+    form: null,
+    saveBtn: null
+  };
+
+  // Global state
+  let allProducts = [];
+  let filteredProducts = [];
+  let auth, WORKER_URL, API_SECRET;
+
+  // Debounce utility for search
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
   function initAdmin() {
-    console.log("Initializing Admin UI...");
+    console.log("Initializing Admin UI v3...");
+    
+    // Cache DOM references
+    DOM.loadingScreen = document.getElementById('loading-screen');
+    DOM.dashboard = document.getElementById('admin-dashboard');
+    DOM.productList = document.getElementById('product-list');
+    DOM.emailDisplay = document.getElementById('admin-email-display');
+    DOM.searchInput = document.getElementById('search-input');
+    DOM.stockFilter = document.getElementById('stock-filter');
+    DOM.productCount = document.getElementById('product-count');
+    DOM.lastUpdated = document.getElementById('last-updated');
+    DOM.signOutBtn = document.getElementById('sign-out-button');
+    DOM.modalTitle = document.getElementById('modalTitle');
+    DOM.form = document.getElementById('product-form');
+    DOM.saveBtn = document.getElementById('save-button');
     
     if (typeof firebase === 'undefined') {
         alert("Firebase ERROR: Script firebase tidak terdeteksi. Cek koneksi internet.");
@@ -136,9 +215,9 @@ permalink: /admin/
         firebase.initializeApp(firebaseConfig);
     }
     
-    const auth = firebase.auth();
-    const WORKER_URL = "{{ site.worker_url }}";
-    const API_SECRET = "{{ site.api_secret }}";
+    auth = firebase.auth();
+    WORKER_URL = "{{ site.worker_url }}";
+    API_SECRET = "{{ site.api_secret }}";
 
     auth.onAuthStateChanged(function(user) {
       console.log("Firebase Auth State:", user ? user.email : "GAK ADA USER");
@@ -150,23 +229,27 @@ permalink: /admin/
       }
 
       // Berhasil Login
-      document.getElementById('loading-screen').style.display = 'none';
-      document.getElementById('admin-email-display').textContent = user.email;
-      
-      const dashboard = document.getElementById('admin-dashboard');
-      dashboard.style.setProperty('display', 'block', 'important');
+      DOM.loadingScreen.style.display = 'none';
+      DOM.emailDisplay.textContent = user.email;
+      DOM.dashboard.style.setProperty('display', 'block', 'important');
       
       console.log("Dashboard unlocked for", user.email);
       window.loadProducts();
     });
 
-    document.getElementById('sign-out-button').addEventListener('click', function() {
+    DOM.signOutBtn.addEventListener('click', function() {
       auth.signOut();
     });
 
+    // Search with debounce
+    DOM.searchInput.addEventListener('input', debounce(filterProducts, 300));
+    
+    // Stock filter
+    DOM.stockFilter.addEventListener('change', filterProducts);
+
     window.loadProducts = async function() {
       console.log("Fetching products from Worker...");
-      const list = document.getElementById('product-list');
+      
       try {
         const res = await fetch(WORKER_URL + '/products', {
           headers: { 'Authorization': 'Bearer ' + API_SECRET }
@@ -175,29 +258,79 @@ permalink: /admin/
         
         if (products.error) throw new Error(products.error);
 
-        list.innerHTML = products.map(function(p) {
-          return '<tr>' +
-            '<td class="ps-4"><div class="d-flex align-items-center">' +
-            '<img src="' + p.img + '" width="40" height="40" class="rounded-3 me-3 object-fit-cover shadow-sm">' +
-            '<span class="fw-bold">' + p.title + '</span></div></td>' +
-            '<td><code class="small text-muted">' + p.url.split('/').pop() + '</code></td>' +
-            '<td><span class="text-success fw-bold">Rp ' + p.harga + '</span></td>' +
-            '<td><span class="badge ' + (p.stock === 'Tersedia' ? 'bg-success' : 'bg-danger') + ' rounded-pill">' + (p.stock || 'Habis') + '</span></td>' +
-            '<td class="text-end pe-4">' +
-            '<button class="btn btn-sm btn-outline-dark me-1" onclick="editProduct(\'' + p.url.split('/').pop() + '\')"><i class="fas fa-edit"></i></button>' +
-            '<button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(\'' + p.url.split('/').pop() + '\')"><i class="fas fa-trash"></i></button>' +
-            '</td></tr>';
-        }).join('');
+        allProducts = products;
+        filteredProducts = [...allProducts];
+        
+        renderProducts(filteredProducts);
+        
+        // Update stats
+        DOM.productCount.textContent = `Total: ${allProducts.length} products`;
+        DOM.lastUpdated.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        
       } catch (err) {
         console.error("Worker fetch failed:", err);
-        list.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-5">Error: ' + err.message + '</td></tr>';
+        DOM.productList.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-5">Error: ' + err.message + '</td></tr>';
       }
     };
 
+    // Client-side filtering for performance
+    function filterProducts() {
+      const searchTerm = DOM.searchInput.value.toLowerCase().trim();
+      const stockValue = DOM.stockFilter.value;
+      
+      filteredProducts = allProducts.filter(p => {
+        const matchesSearch = !searchTerm || 
+          p.title.toLowerCase().includes(searchTerm) ||
+          p.code.toLowerCase().includes(searchTerm) ||
+          p.url.split('/').pop().toLowerCase().includes(searchTerm);
+        
+        const matchesStock = stockValue === 'all' || p.stock === stockValue;
+        
+        return matchesSearch && matchesStock;
+      });
+      
+      renderProducts(filteredProducts);
+      DOM.productCount.textContent = `Showing: ${filteredProducts.length} of ${allProducts.length} products`;
+    }
+
+    // Optimized render with document fragment
+    function renderProducts(products) {
+      if (products.length === 0) {
+        DOM.productList.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5">No products found</td></tr>';
+        return;
+      }
+      
+      const fragment = document.createDocumentFragment();
+      const tbody = document.createElement('tbody');
+      
+      products.forEach(function(p) {
+        const tr = document.createElement('tr');
+        tr.className = 'table-row-transition';
+        const slug = p.url.split('/').pop();
+        
+        tr.innerHTML = 
+          '<td class="ps-4"><div class="d-flex align-items-center">' +
+          '<img src="' + p.img + '" width="40" height="40" class="rounded-3 me-3 object-fit-cover shadow-sm product-img" loading="lazy">' +
+          '<span class="fw-bold">' + p.title + '</span></div></td>' +
+          '<td><code class="small text-muted">' + slug + '</code></td>' +
+          '<td><span class="text-success fw-bold">Rp ' + p.harga + '</span></td>' +
+          '<td><span class="badge ' + (p.stock === 'Tersedia' ? 'bg-success' : 'bg-danger') + ' rounded-pill">' + (p.stock || 'Habis') + '</span></td>' +
+          '<td class="text-end pe-4">' +
+          '<button class="btn btn-sm btn-outline-dark me-1" onclick="editProduct(\'' + slug + '\')"><i class="fas fa-edit"></i></button>' +
+          '<button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(\'' + slug + '\')"><i class="fas fa-trash"></i></button>' +
+          '</td>';
+        
+        tbody.appendChild(tr);
+      });
+      
+      DOM.productList.innerHTML = '';
+      DOM.productList.appendChild(tbody);
+    }
+
     window.prepareAdd = function() {
-      document.getElementById('product-form').reset();
+      DOM.form.reset();
       document.getElementById('edit-slug').value = '';
-      document.getElementById('modalTitle').textContent = 'Add New Product';
+      DOM.modalTitle.textContent = 'Add New Product';
     };
 
     window.editProduct = async function(slug) {
@@ -217,7 +350,7 @@ permalink: /admin/
         document.getElementById('p-desc').value = p.description || '';
         document.getElementById('p-content').value = p.content || '';
         
-        document.getElementById('modalTitle').textContent = 'Edit Product';
+        DOM.modalTitle.textContent = 'Edit Product';
         new bootstrap.Modal(document.getElementById('productModal')).show();
       } catch (err) {
         alert('Error: ' + err.message);
@@ -226,7 +359,7 @@ permalink: /admin/
 
     window.saveProduct = async function() {
       const slug = document.getElementById('edit-slug').value;
-      const btn = document.getElementById('save-button');
+      const btn = DOM.saveBtn;
       
       const data = {
         title: document.getElementById('p-title').value,
@@ -243,6 +376,9 @@ permalink: /admin/
       };
 
       btn.disabled = true;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Saving...';
+      
       try {
         const method = slug ? 'PUT' : 'POST';
         const url = slug ? WORKER_URL + '/products/' + slug : WORKER_URL + '/products';
@@ -252,24 +388,31 @@ permalink: /admin/
           body: JSON.stringify(data)
         });
         if (!res.ok) throw new Error('Worker rejected the request');
+        
         bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
-        window.loadProducts();
+        await window.loadProducts(); // Refresh list
       } catch (err) {
         alert('Save Error: ' + err.message);
       } finally {
         btn.disabled = false;
+        btn.innerHTML = originalText;
       }
     };
 
     window.deleteProduct = async function(slug) {
       if (!confirm('Hapus produk ' + slug + '?')) return;
+      
+      const originalContent = DOM.productList.innerHTML;
+      DOM.productList.innerHTML = '<tr><td colspan="5" class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></td></tr>';
+      
       try {
         await fetch(WORKER_URL + '/products/' + slug, {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + API_SECRET }
         });
-        window.loadProducts();
+        await window.loadProducts();
       } catch (err) {
+        DOM.productList.innerHTML = originalContent;
         alert('Delete Error: ' + err.message);
       }
     };

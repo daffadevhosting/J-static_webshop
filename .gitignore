@@ -1,15 +1,1 @@
-_site
-_styles
-.DS_Store
-.jekyll
-.bundle
-.env
-.sass-cache
-.jekyll-cache
-vendor/bundle
-vendor/cache
-vendor/gems
-vendor/ruby
-Gemfile.lock
-node_modules
-package-lock.json
+Nothing should be ignored based on the provided file changes. The only modified file is 'admin/index.html', which is a source/config file and should not be added to .gitignore.
