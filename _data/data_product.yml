@@ -2,7 +2,7 @@
   img: /images/products/deer/black.jpg
   title: Sacha the Deer
   harga: '5.000'
-  stock: Tersedia
+  stock: ''
 - url: /products/hog
   img: /images/products/hog/blue.jpg
   title: Todd the Hedgehog
