@@ -45,6 +45,8 @@ $ gulp
 
 dan silahkan ganti gambar produk dan keterangan produk, juga blog post sesuai dengan barang jualan kamu.
 
+<center>###ScreenShoot</center>
+
 <img src="/images/logo/(Nest Hub Max-Dash).png" alt="J-static_webshop_DashBoard" style="width:100%;"/>
 <p/>
 <img src="/images/logo/(Nest Hub Max1).png" alt="J-static_webshop" style="width:100%;"/>
