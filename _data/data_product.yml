@@ -4,10 +4,10 @@
   harga: '5.000'
   stock: ''
 - url: /products/hog
-  img: /images/products/hog/blue.jpg
+  img: /images/products/hog/clay.jpg
   title: Todd the Hedgehog
-  harga: '10.000'
-  stock: null
+  harga: '15.000'
+  stock: Tersedia
 - url: /products/elephant
   img: /images/products/elephant/green.jpg
   title: Bumble the Elephant
