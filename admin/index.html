@@ -33,7 +33,7 @@ permalink: /admin/
 
         <!-- Search & Filter Bar -->
         <div class="mb-3 d-flex gap-2">
-            <input type="text" id="search-input" class="form-control" placeholder="Search products..." style="max-width: 300px;">
+            <input type="text" id="input-search" class="form-control" placeholder="Search products..." style="max-width: 300px;">
             <select id="stock-filter" class="form-select" style="max-width: 150px;">
                 <option value="all">All Stock</option>
                 <option value="Tersedia">Available</option>
@@ -197,7 +197,7 @@ permalink: /admin/
     DOM.dashboard = document.getElementById('admin-dashboard');
     DOM.productList = document.getElementById('product-list');
     DOM.emailDisplay = document.getElementById('admin-email-display');
-    DOM.searchInput = document.getElementById('search-input');
+    DOM.searchInput = document.getElementById('input-search');
     DOM.stockFilter = document.getElementById('stock-filter');
     DOM.productCount = document.getElementById('product-count');
     DOM.lastUpdated = document.getElementById('last-updated');
