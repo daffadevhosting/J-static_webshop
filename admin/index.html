@@ -63,6 +63,7 @@ permalink: /admin
                 <form id="product-form">
                     <input type="hidden" id="edit-slug">
                     <div class="row">
+                        <!-- Basic Info -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label small fw-bold">Title</label>
                             <input type="text" id="p-title" class="form-control" required>
@@ -90,15 +91,32 @@ permalink: /admin
                             <label class="form-label small fw-bold">Tags (Comma separated)</label>
                             <input type="text" id="p-tags" class="form-control" placeholder="Terbaru, Terlaris">
                         </div>
+
+                        <!-- Sizes -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label small fw-bold">Available Sizes</label>
+                            <div id="size-container" class="d-flex flex-wrap gap-2 mb-2">
+                                <!-- Size badges will appear here -->
+                            </div>
+                            <div class="input-group input-group-sm" style="max-width: 250px;">
+                                <input type="text" id="new-size" class="form-control" placeholder="Add size (e.g. XXL)">
+                                <button class="btn btn-outline-dark" type="button" onclick="addSize()">Add</button>
+                            </div>
+                        </div>
+
+                        <!-- Images & Styles -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label small fw-bold">Product Images & Colors (Styles)</label>
+                            <input type="file" id="p-images" class="form-control mb-3" multiple accept="image/*">
+                            <div id="style-config-container" class="row g-3">
+                                <!-- Style configurators will appear here after image select -->
+                            </div>
+                            <small class="text-muted mt-2 d-block">Maximum 5 images. Each image creates a 'Style' entry.</small>
+                        </div>
+
                         <div class="col-12 mb-3">
                             <label class="form-label small fw-bold">Description</label>
                             <textarea id="p-desc" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label class="form-label small fw-bold">Upload Images (Max 5, Max 1MB each)</label>
-                            <input type="file" id="p-images" class="form-control" multiple accept="image/*">
-                            <div id="image-previews" class="d-flex flex-wrap gap-2 mt-2"></div>
-                            <small class="text-muted">Images will automatically create product gallery.</small>
                         </div>
                         <div class="col-12 mb-3">
                             <label class="form-label small fw-bold">Content (Markdown)</label>
@@ -114,9 +132,16 @@ permalink: /admin
     </div>
 </div>
 
+<style>
+    .size-badge { cursor: pointer; transition: all 0.2s; }
+    .size-badge:hover { opacity: 0.7; text-decoration: line-through; }
+    .style-card { border: 1px solid #eee; padding: 10px; border-radius: 10px; background: #fafafa; }
+    .style-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; }
+</style>
+
 <script>
 (function() {
-  console.log("=== ADMIN DASHBOARD v4.2 (Sync Schema) ===");
+  console.log("=== ADMIN DASHBOARD v4.3 (Styles & Sizes) ===");
 
   const firebaseConfig = {
     apiKey: "{{ site.env.API_KEY }}",
@@ -130,8 +155,9 @@ permalink: /admin
   const WORKER_URL = "{{ site.worker_url }}";
   const API_SECRET = "{{ site.api_secret }}";
 
-  let uploadedImages = [];
-  let currentStyles = [];
+  let uploadedImages = []; // [{name, data}]
+  let currentSizes = ['Small', 'Medium', 'Large', 'XL'];
+  let currentStyles = []; // [{name, color, image_path}]
 
   function init() {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -146,7 +172,9 @@ permalink: /admin
       saveBtn: document.getElementById('save-button'),
       modalTitle: document.getElementById('modalTitle'),
       fileInput: document.getElementById('p-images'),
-      previews: document.getElementById('image-previews')
+      styleContainer: document.getElementById('style-config-container'),
+      sizeContainer: document.getElementById('size-container'),
+      newSizeInput: document.getElementById('new-size')
     };
 
     auth.onAuthStateChanged(function(user) {
@@ -162,64 +190,126 @@ permalink: /admin
 
     document.getElementById('sign-out-button').onclick = () => auth.signOut();
 
+    // Size Management
+    window.renderSizes = () => {
+      DOM.sizeContainer.innerHTML = currentSizes.map(s => 
+        `<span class="badge bg-dark size-badge" onclick="removeSize('${s}')">${s} <i class="fas fa-times ms-1"></i></span>`
+      ).join('');
+    };
+
+    window.addSize = () => {
+      const val = DOM.newSizeInput.value.trim();
+      if (val && !currentSizes.includes(val)) {
+        currentSizes.push(val);
+        renderSizes();
+        DOM.newSizeInput.value = '';
+      }
+    };
+
+    window.removeSize = (size) => {
+      currentSizes = currentSizes.filter(s => s !== size);
+      renderSizes();
+    };
+
+    // Style/Image Management
     DOM.fileInput.onchange = async (e) => {
       const files = Array.from(e.target.files);
-      if (files.length > 5) {
-          alert("Max 5 images allowed");
-          DOM.fileInput.value = '';
-          return;
-      }
+      if (files.length > 5) { alert("Max 5 images"); DOM.fileInput.value = ''; return; }
 
       uploadedImages = [];
-      DOM.previews.innerHTML = '';
+      DOM.styleContainer.innerHTML = '<div class="col-12"><div class="spinner-border spinner-border-sm text-primary"></div> Processing images...</div>';
 
-      for (const file of files) {
-        if (file.size > 1024 * 1024) {
-          alert(`File ${file.name} is too large (> 1MB)`);
-          continue;
-        }
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.size > 1024 * 1024) continue;
 
         const reader = new FileReader();
         reader.onload = (event) => {
           const base64Data = event.target.result.split(',')[1];
           uploadedImages.push({ name: file.name, data: base64Data });
           
-          const img = document.createElement('img');
-          img.src = event.target.result;
-          img.className = 'rounded border shadow-sm';
-          img.style.width = '80px';
-          img.style.height = '80px';
-          img.style.objectFit = 'cover';
-          DOM.previews.appendChild(img);
+          if (uploadedImages.length === files.length) renderStyleConfig(event.target.result, i);
         };
         reader.readAsDataURL(file);
       }
+      
+      // Wait for all readers and render
+      setTimeout(() => renderStyleConfigsFromUploads(), 500);
     };
+
+    function renderStyleConfigsFromUploads() {
+        DOM.styleContainer.innerHTML = '';
+        uploadedImages.forEach((img, idx) => {
+            const div = document.createElement('div');
+            div.className = 'col-md-6';
+            div.innerHTML = `
+                <div class="style-card d-flex gap-3 align-items-center">
+                    <img src="data:image/jpeg;base64,${img.data}" class="style-preview">
+                    <div class="flex-grow-1">
+                        <input type="text" class="form-control form-control-sm mb-1 style-name" placeholder="Color Name" value="Color ${idx+1}">
+                        <input type="color" class="form-control form-control-sm style-color" value="#000000">
+                    </div>
+                </div>
+            `;
+            DOM.styleContainer.appendChild(div);
+        });
+    }
+
+    function renderExistingStyles(styles) {
+        DOM.styleContainer.innerHTML = '';
+        styles.forEach((s, idx) => {
+            const div = document.createElement('div');
+            div.className = 'col-md-6';
+            div.innerHTML = `
+                <div class="style-card d-flex gap-3 align-items-center">
+                    <img src="${s.image_path}" class="style-preview">
+                    <div class="flex-grow-1">
+                        <input type="text" class="form-control form-control-sm mb-1 style-name" value="${s.name}">
+                        <input type="color" class="form-control form-control-sm style-color" value="${s.color || '#000000'}">
+                    </div>
+                </div>
+            `;
+            DOM.styleContainer.appendChild(div);
+        });
+    }
 
     window.prepareAdd = function() {
       DOM.form.reset();
-      DOM.previews.innerHTML = '';
+      DOM.styleContainer.innerHTML = '';
       uploadedImages = [];
       currentStyles = [];
+      currentSizes = ['Small', 'Medium', 'Large', 'XL'];
+      renderSizes();
       document.getElementById('edit-slug').value = '';
       DOM.modalTitle.textContent = 'Add Product';
     };
 
     window.saveProduct = async function() {
       const slug = document.getElementById('edit-slug').value;
-      const tags = document.getElementById('p-tags').value.split(',').map(t => t.trim()).filter(t => t !== '');
       
+      // Collect styles from UI
+      const styleElements = DOM.styleContainer.querySelectorAll('.style-card');
+      const stylesData = [];
+      styleElements.forEach((el, idx) => {
+          stylesData.push({
+              name: el.querySelector('.style-name').value,
+              color: el.querySelector('.style-color').value,
+              // image_path will be handled by worker if images are new
+          });
+      });
+
       const data = {
         code: document.getElementById('p-code').value,
         title: document.getElementById('p-title').value,
         price: document.getElementById('p-price').value,
         stock: document.getElementById('p-stock').value,
         category: document.getElementById('p-category').value,
-        tags: tags,
+        tags: document.getElementById('p-tags').value.split(',').map(t => t.trim()).filter(t => t),
+        sizes: currentSizes,
         description: document.getElementById('p-desc').value,
         content: document.getElementById('p-content').value,
         images: uploadedImages,
-        styles: currentStyles // Send back existing styles if no new images
+        styles: slug && uploadedImages.length === 0 ? currentStyles.map((s, i) => ({...s, color: styleElements[i].querySelector('.style-color').value, name: styleElements[i].querySelector('.style-name').value })) : stylesData
       };
 
       DOM.saveBtn.disabled = true;
@@ -261,22 +351,12 @@ permalink: /admin
         document.getElementById('p-desc').value = p.description || '';
         document.getElementById('p-content').value = p.content || '';
         
-        DOM.previews.innerHTML = '';
-        uploadedImages = [];
-        currentStyles = p.styles || [];
+        currentSizes = Array.isArray(p.sizes) ? p.sizes : ['Small', 'Medium', 'Large', 'XL'];
+        renderSizes();
         
-        // Show current styles/images
-        if (p.styles && p.styles.length > 0) {
-            p.styles.forEach(s => {
-                const img = document.createElement('img');
-                img.src = s.image_path;
-                img.className = 'rounded border shadow-sm';
-                img.style.width = '60px';
-                img.style.height = '60px';
-                img.style.objectFit = 'cover';
-                DOM.previews.appendChild(img);
-            });
-        }
+        currentStyles = p.styles || [];
+        uploadedImages = [];
+        renderExistingStyles(currentStyles);
 
         DOM.modalTitle.textContent = 'Edit Product';
         new bootstrap.Modal(document.getElementById('productModal')).show();
@@ -327,6 +407,8 @@ permalink: /admin
         DOM.list.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger">Error: ${e.message}</td></tr>`;
     }
   }
+
+  function debounce(f, w) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => f(...a), w); }; }
 
   const poll = setInterval(() => {
     if (typeof firebase !== 'undefined' && firebase.auth) {
