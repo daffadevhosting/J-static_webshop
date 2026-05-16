@@ -10,7 +10,7 @@ J-static adalah website Online Shop berbasis Jekyll yang dibuat dengan simpleCar
 - **Automated Content:** Penambahan produk otomatis membuat file Markdown di folder `_posts` dan memperbarui `_data/data_product.yml`.
 
 Repo: https://github.com/daffadevhosting/J-static_webshop.git<br>
-Demo: https://j-static-webshop.pages.dev/
+Demo: https://j-static-webshop.pages.dev/<br>
 Admin: https://j-static-webshop.pages.dev/admin
 
 ### 🚀 Cara Install
