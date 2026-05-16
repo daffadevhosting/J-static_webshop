@@ -1,4 +1,4 @@
-<div class="row footer-widgets mt-3 {% if page.url contains '/blogs/' %}hidden{% endif %}">
+<div class="row footer-widgets mt-3 {% if page.url contains '/blogs/' or page.url contains '/products/' or page.url contains '/admin/' %}hidden{% endif %}">
     <div class="footer-widget d-flex">
 {% for data in site.data.widget %}
       <section class="col p-3 widget card shadow-sm">
