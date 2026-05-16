@@ -51,9 +51,9 @@ permalink: /admin
     </div>
 </div>
 
-<!-- Simple Product Modal -->
+<!-- Product Modal -->
 <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4">
             <div class="modal-header border-0 pb-0 ps-4 pt-4">
                 <h5 class="modal-title fw-bold" id="modalTitle">Product Form</h5>
@@ -62,24 +62,40 @@ permalink: /admin
             <div class="modal-body p-4">
                 <form id="product-form">
                     <input type="hidden" id="edit-slug">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Title</label>
-                        <input type="text" id="p-title" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Price</label>
-                        <input type="text" id="p-price" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Stock</label>
-                        <select id="p-stock" class="form-select">
-                            <option value="Tersedia">Tersedia</option>
-                            <option value="">Habis</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Image URL</label>
-                        <input type="text" id="p-img" class="form-control" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Title</label>
+                            <input type="text" id="p-title" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Code</label>
+                            <input type="text" id="p-code" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Price</label>
+                            <input type="text" id="p-price" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Stock</label>
+                            <select id="p-stock" class="form-select">
+                                <option value="Tersedia">Tersedia</option>
+                                <option value="">Habis</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label small fw-bold">Description</label>
+                            <textarea id="p-desc" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label small fw-bold">Upload Images (Max 5, Max 1MB each)</label>
+                            <input type="file" id="p-images" class="form-control" multiple accept="image/*">
+                            <div id="image-previews" class="d-flex flex-wrap gap-2 mt-2"></div>
+                            <small class="text-muted">First image will be the Featured Image.</small>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label small fw-bold">Content (Markdown)</label>
+                            <textarea id="p-content" class="form-control" rows="4"></textarea>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -92,7 +108,7 @@ permalink: /admin
 
 <script>
 (function() {
-  console.log("=== ADMIN DASHBOARD v4.0 (Dedicated Layout) ===");
+  console.log("=== ADMIN DASHBOARD v4.1 (Image Upload) ===");
 
   const firebaseConfig = {
     apiKey: "{{ site.env.API_KEY }}",
@@ -106,8 +122,9 @@ permalink: /admin
   const WORKER_URL = "{{ site.worker_url }}";
   const API_SECRET = "{{ site.api_secret }}";
 
+  let uploadedImages = [];
+
   function init() {
-    console.log("Initializing Admin...");
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
@@ -118,11 +135,12 @@ permalink: /admin
       email: document.getElementById('admin-email-display'),
       form: document.getElementById('product-form'),
       saveBtn: document.getElementById('save-button'),
-      modalTitle: document.getElementById('modalTitle')
+      modalTitle: document.getElementById('modalTitle'),
+      fileInput: document.getElementById('p-images'),
+      previews: document.getElementById('image-previews')
     };
 
     auth.onAuthStateChanged(function(user) {
-      console.log("Auth State Changed:", user ? user.email : "NULL");
       if (!user) {
         window.location.href = "{{ '/admin/login' | relative_url }}";
         return;
@@ -135,8 +153,45 @@ permalink: /admin
 
     document.getElementById('sign-out-button').onclick = () => auth.signOut();
 
+    // Image handling
+    DOM.fileInput.onchange = async (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length > 5) {
+          alert("Max 5 images allowed");
+          DOM.fileInput.value = '';
+          return;
+      }
+
+      uploadedImages = [];
+      DOM.previews.innerHTML = '';
+
+      for (const file of files) {
+        if (file.size > 1024 * 1024) {
+          alert(`File ${file.name} is too large (> 1MB)`);
+          continue;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const base64Data = event.target.result.split(',')[1];
+          uploadedImages.push({ name: file.name, data: base64Data });
+          
+          const img = document.createElement('img');
+          img.src = event.target.result;
+          img.className = 'rounded border shadow-sm';
+          img.style.width = '80px';
+          img.style.height = '80px';
+          img.style.objectFit = 'cover';
+          DOM.previews.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
     window.prepareAdd = function() {
       DOM.form.reset();
+      DOM.previews.innerHTML = '';
+      uploadedImages = [];
       document.getElementById('edit-slug').value = '';
       DOM.modalTitle.textContent = 'Add Product';
     };
@@ -145,22 +200,34 @@ permalink: /admin
       const slug = document.getElementById('edit-slug').value;
       const data = {
         title: document.getElementById('p-title').value,
+        code: document.getElementById('p-code').value,
         price: document.getElementById('p-price').value,
         stock: document.getElementById('p-stock').value,
-        featured_image_path: document.getElementById('p-img').value
+        description: document.getElementById('p-desc').value,
+        content: document.getElementById('p-content').value,
+        images: uploadedImages
       };
+
       DOM.saveBtn.disabled = true;
+      DOM.saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Saving...';
+      
       try {
         const url = slug ? WORKER_URL + '/products/' + slug : WORKER_URL + '/products';
-        await fetch(url, {
+        const res = await fetch(url, {
           method: slug ? 'PUT' : 'POST',
           headers: { 'Authorization': 'Bearer ' + API_SECRET, 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
+        const result = await res.json();
+        if (result.error) throw new Error(result.error);
+        
         bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
         loadProducts(DOM);
-      } catch (e) { alert(e.message); }
-      finally { DOM.saveBtn.disabled = false; }
+      } catch (e) { alert("Save Error: " + e.message); }
+      finally { 
+        DOM.saveBtn.disabled = false;
+        DOM.saveBtn.textContent = 'Save Product';
+      }
     };
 
     window.editProduct = async function(slug) {
@@ -169,11 +236,29 @@ permalink: /admin
           headers: { 'Authorization': 'Bearer ' + API_SECRET }
         });
         const p = await res.json();
+        
         document.getElementById('edit-slug').value = slug;
         document.getElementById('p-title').value = p.title || '';
+        document.getElementById('p-code').value = p.code || '';
         document.getElementById('p-price').value = p.price || '';
         document.getElementById('p-stock').value = p.stock || '';
-        document.getElementById('p-img').value = p.featured_image_path || '';
+        document.getElementById('p-desc').value = p.description || '';
+        document.getElementById('p-content').value = p.content || '';
+        
+        DOM.previews.innerHTML = '';
+        uploadedImages = [];
+        
+        // Show current featured image if exists
+        if (p.featured_image_path) {
+            const img = document.createElement('img');
+            img.src = p.featured_image_path;
+            img.className = 'rounded border border-primary shadow-sm';
+            img.style.width = '80px';
+            img.style.height = '80px';
+            img.style.objectFit = 'cover';
+            DOM.previews.appendChild(img);
+        }
+
         DOM.modalTitle.textContent = 'Edit Product';
         new bootstrap.Modal(document.getElementById('productModal')).show();
       } catch (e) { alert(e.message); }
@@ -198,21 +283,18 @@ permalink: /admin
         headers: { 'Authorization': 'Bearer ' + API_SECRET }
       });
       const data = await res.json();
+      if (data.error) throw new Error(data.error);
       
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      
-      if (!Array.isArray(data)) {
-        console.error("Expected array but got:", data);
-        throw new Error("Invalid data format from API");
-      }
-
       let html = '';
       data.forEach(p => {
         const slug = p.url ? p.url.split('/').pop() : 'no-slug';
         html += `<tr>
-          <td class="ps-4"><b>${p.title || 'Untitled'}</b></td>
+          <td class="ps-4">
+            <div class="d-flex align-items-center">
+                <img src="${p.img}" width="40" height="40" class="rounded me-3 object-fit-cover shadow-sm">
+                <b>${p.title || 'Untitled'}</b>
+            </div>
+          </td>
           <td><code>${slug}</code></td>
           <td><span class="text-success">Rp ${p.harga || '0'}</span></td>
           <td><span class="badge ${p.stock === 'Tersedia' ? 'bg-success' : 'bg-danger'}">${p.stock || 'Habis'}</span></td>
@@ -223,11 +305,7 @@ permalink: /admin
       });
       DOM.list.innerHTML = html || '<tr><td colspan="5" class="text-center py-5 text-muted">No products found.</td></tr>';
     } catch (e) { 
-      console.error("Load failed:", e);
-      DOM.list.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger">
-        <i class="fas fa-exclamation-triangle me-2"></i> Error: ${e.message}<br>
-        <small class="text-muted">Check Worker environment variables (GITHUB_TOKEN, etc.)</small>
-      </td></tr>`;
+        DOM.list.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger">Error: ${e.message}</td></tr>`;
     }
   }
 
