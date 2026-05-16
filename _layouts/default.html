@@ -4,10 +4,8 @@ layout: compress
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: 'id-ID' }}">
     {% include meta_head.html %}
-<body scroll="no">
+<body scroll="no" {% if page.url == '/' %}class="homepage{% if page.sidebar_option != 'sidebar' %} full-width-content{% endif %}" {% elsif page.url contains '/blog/' or page.layout == 'archive' %}class="archive full-width-content" {% elsif page.url contains '/products/' %}class="product" {% elsif page.sidebar_option != 'sidebar' %}class="full-width-content" {% endif %}itemscope itemtype="http://schema.org/WebPage">
     {% include loader.html %}
-</body>
-<body {% if page.url == '/' %}class="homepage{% if page.sidebar_option != 'sidebar' %} full-width-content{% endif %}" {% elsif page.url contains '/blog/' or page.layout == 'archive' %}class="archive full-width-content" {% elsif page.url contains '/products/' %}class="product" {% elsif page.sidebar_option != 'sidebar' %}class="full-width-content" {% endif %}itemscope itemtype="http://schema.org/WebPage">
     {% include navbar.html %}
     {% include back_to_top.html %}
         {% if page.url == '/' %}

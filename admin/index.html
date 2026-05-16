@@ -1,11 +1,10 @@
 ---
-layout: default
+layout: admin
 title: Admin Dashboard
 permalink: /admin
 ---
 
-<!-- OPTIMIZED v3: Performance improvements -->
-<div id="loading-screen" class="text-center py-5">
+<div id="loading-screen">
     <div class="spinner-border text-primary" role="status"></div>
     <p class="mt-3">Checking authentication status...</p>
 </div>
@@ -31,16 +30,6 @@ permalink: /admin
             </button>
         </div>
 
-        <!-- Search & Filter Bar -->
-        <div class="mb-3 d-flex gap-2">
-            <input type="text" id="input-search" class="form-control" placeholder="Search products..." style="max-width: 300px;">
-            <select id="stock-filter" class="form-select" style="max-width: 150px;">
-                <option value="all">All Stock</option>
-                <option value="Tersedia">Available</option>
-                <option value="">Out of Stock</option>
-            </select>
-        </div>
-
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -59,98 +48,51 @@ permalink: /admin
                 </table>
             </div>
         </div>
-        
-        <!-- Pagination Info -->
-        <div class="d-flex justify-content-between align-items-center mt-3 text-muted small">
-            <span id="product-count">Total: 0 products</span>
-            <span id="last-updated">Last updated: --</span>
-        </div>
     </div>
 </div>
 
-<!-- Product Modal -->
+<!-- Simple Product Modal -->
 <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4">
             <div class="modal-header border-0 pb-0 ps-4 pt-4">
-                <h5 class="modal-title fw-bold" id="modalTitle">Add New Product</h5>
+                <h5 class="modal-title fw-bold" id="modalTitle">Product Form</h5>
                 <button type="button" class="btn-close me-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <form id="product-form">
                     <input type="hidden" id="edit-slug">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold">Title</label>
-                            <input type="text" id="p-title" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold">Product Code</label>
-                            <input type="text" id="p-code" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold">Price (IDR)</label>
-                            <input type="text" id="p-price" class="form-control" required placeholder="5.000">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold">Stock Status</label>
-                            <select id="p-stock" class="form-select">
-                                <option value="Tersedia">Tersedia</option>
-                                <option value="">Habis</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label small fw-bold">Featured Image Path</label>
-                            <input type="text" id="p-img" class="form-control" required placeholder="/images/products/example.jpg">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label small fw-bold">Description</label>
-                            <textarea id="p-desc" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label small fw-bold">Content (Markdown)</label>
-                            <textarea id="p-content" class="form-control" rows="5"></textarea>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Title</label>
+                        <input type="text" id="p-title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Price</label>
+                        <input type="text" id="p-price" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Stock</label>
+                        <select id="p-stock" class="form-select">
+                            <option value="Tersedia">Tersedia</option>
+                            <option value="">Habis</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Image URL</label>
+                        <input type="text" id="p-img" class="form-control" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer border-0 pt-0 pe-4 pb-4">
-                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-dark rounded-pill px-4" id="save-button" onclick="saveProduct()">Save Product</button>
             </div>
         </div>
     </div>
 </div>
-    <style>
-    #loading-screen {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            translate: -50% -50%;
-        }
-        footer, .footer-widgets {
-            display: none !important;
-            visibility: hidden !important;
-        }
-        /* Performance: Lazy load images */
-        .product-img {
-            content-visibility: auto;
-            contain-intrinsic-size: 40px;
-        }
-        /* Smooth transitions */
-        .table-row-transition {
-            transition: background-color 0.2s ease;
-        }
-    </style>
+
 <script>
-  // OPTIMIZED v3: Performance improvements
-  // - Debounced search
-  // - Client-side filtering
-  // - Lazy image loading
-  // - Cached DOM references
-  // - Reduced re-renders
-  
-  console.log("=== ADMIN SCRIPT v3 OPTIMIZED ===");
+(function() {
+  console.log("=== ADMIN DASHBOARD v4.0 (Dedicated Layout) ===");
 
   const firebaseConfig = {
     apiKey: "{{ site.env.API_KEY }}",
@@ -161,273 +103,139 @@ permalink: /admin
     appId: "{{ site.env.APP_ID }}"
   };
 
-  // Cache DOM elements
-  const DOM = {
-    loadingScreen: null,
-    dashboard: null,
-    productList: null,
-    emailDisplay: null,
-    searchInput: null,
-    stockFilter: null,
-    productCount: null,
-    lastUpdated: null,
-    signOutBtn: null,
-    modalTitle: null,
-    form: null,
-    saveBtn: null
-  };
+  const WORKER_URL = "{{ site.worker_url }}";
+  const API_SECRET = "{{ site.api_secret }}";
 
-  // Global state
-  let allProducts = [];
-  let filteredProducts = [];
-  let auth, WORKER_URL, API_SECRET;
+  function init() {
+    console.log("Initializing Admin...");
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-  // Debounce utility for search
-  function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
+    const DOM = {
+      loading: document.getElementById('loading-screen'),
+      dashboard: document.getElementById('admin-dashboard'),
+      list: document.getElementById('product-list'),
+      email: document.getElementById('admin-email-display'),
+      form: document.getElementById('product-form'),
+      saveBtn: document.getElementById('save-button'),
+      modalTitle: document.getElementById('modalTitle')
     };
-  }
-
-  function initAdmin() {
-    console.log("Initializing Admin UI v3...");
-    
-    // Cache DOM references
-    DOM.loadingScreen = document.getElementById('loading-screen');
-    DOM.dashboard = document.getElementById('admin-dashboard');
-    DOM.productList = document.getElementById('product-list');
-    DOM.emailDisplay = document.getElementById('admin-email-display');
-    DOM.searchInput = document.getElementById('input-search');
-    DOM.stockFilter = document.getElementById('stock-filter');
-    DOM.productCount = document.getElementById('product-count');
-    DOM.lastUpdated = document.getElementById('last-updated');
-    DOM.signOutBtn = document.getElementById('sign-out-button');
-    DOM.modalTitle = document.getElementById('modalTitle');
-    DOM.form = document.getElementById('product-form');
-    DOM.saveBtn = document.getElementById('save-button');
-    
-    if (typeof firebase === 'undefined') {
-        alert("Firebase ERROR: Script firebase tidak terdeteksi. Cek koneksi internet.");
-        return;
-    }
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    
-    auth = firebase.auth();
-    WORKER_URL = "{{ site.worker_url }}";
-    API_SECRET = "{{ site.api_secret }}";
 
     auth.onAuthStateChanged(function(user) {
-      console.log("Firebase Auth State:", user ? user.email : "GAK ADA USER");
-      
+      console.log("Auth State Changed:", user ? user.email : "NULL");
       if (!user) {
-        console.warn("Unauthorized! Redirecting to login...");
         window.location.href = "{{ '/admin/login' | relative_url }}";
         return;
       }
-
-      // Berhasil Login
-      DOM.loadingScreen.style.display = 'none';
-      DOM.emailDisplay.textContent = user.email;
-      DOM.dashboard.style.setProperty('display', 'block', 'important');
-      
-      console.log("Dashboard unlocked for", user.email);
-      window.loadProducts();
+      DOM.loading.style.display = 'none';
+      DOM.dashboard.style.display = 'block';
+      DOM.email.textContent = user.email;
+      loadProducts(DOM);
     });
 
-    DOM.signOutBtn.addEventListener('click', function() {
-      auth.signOut();
-    });
-
-    // Search with debounce
-    DOM.searchInput.addEventListener('input', debounce(filterProducts, 300));
-    
-    // Stock filter
-    DOM.stockFilter.addEventListener('change', filterProducts);
-
-    window.loadProducts = async function() {
-      console.log("Fetching products from Worker...");
-      
-      try {
-        const res = await fetch(WORKER_URL + '/products', {
-          headers: { 'Authorization': 'Bearer ' + API_SECRET }
-        });
-        const products = await res.json();
-        
-        if (products.error) throw new Error(products.error);
-
-        allProducts = products;
-        filteredProducts = [...allProducts];
-        
-        renderProducts(filteredProducts);
-        
-        // Update stats
-        DOM.productCount.textContent = `Total: ${allProducts.length} products`;
-        DOM.lastUpdated.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
-        
-      } catch (err) {
-        console.error("Worker fetch failed:", err);
-        DOM.productList.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-5">Error: ' + err.message + '</td></tr>';
-      }
-    };
-
-    // Client-side filtering for performance
-    function filterProducts() {
-      const searchTerm = DOM.searchInput.value.toLowerCase().trim();
-      const stockValue = DOM.stockFilter.value;
-      
-      filteredProducts = allProducts.filter(p => {
-        const matchesSearch = !searchTerm || 
-          p.title.toLowerCase().includes(searchTerm) ||
-          p.code.toLowerCase().includes(searchTerm) ||
-          p.url.split('/').pop().toLowerCase().includes(searchTerm);
-        
-        const matchesStock = stockValue === 'all' || p.stock === stockValue;
-        
-        return matchesSearch && matchesStock;
-      });
-      
-      renderProducts(filteredProducts);
-      DOM.productCount.textContent = `Showing: ${filteredProducts.length} of ${allProducts.length} products`;
-    }
-
-    // Optimized render with document fragment
-    function renderProducts(products) {
-      if (products.length === 0) {
-        DOM.productList.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-5">No products found</td></tr>';
-        return;
-      }
-      
-      const fragment = document.createDocumentFragment();
-      const tbody = document.createElement('tbody');
-      
-      products.forEach(function(p) {
-        const tr = document.createElement('tr');
-        tr.className = 'table-row-transition';
-        const slug = p.url.split('/').pop();
-        
-        tr.innerHTML = 
-          '<td class="ps-4"><div class="d-flex align-items-center">' +
-          '<img src="' + p.img + '" width="40" height="40" class="rounded-3 me-3 object-fit-cover shadow-sm product-img" loading="lazy">' +
-          '<span class="fw-bold">' + p.title + '</span></div></td>' +
-          '<td><code class="small text-muted">' + slug + '</code></td>' +
-          '<td><span class="text-success fw-bold">Rp ' + p.harga + '</span></td>' +
-          '<td><span class="badge ' + (p.stock === 'Tersedia' ? 'bg-success' : 'bg-danger') + ' rounded-pill">' + (p.stock || 'Habis') + '</span></td>' +
-          '<td class="text-end pe-4">' +
-          '<button class="btn btn-sm btn-outline-dark me-1" onclick="editProduct(\'' + slug + '\')"><i class="fas fa-edit"></i></button>' +
-          '<button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(\'' + slug + '\')"><i class="fas fa-trash"></i></button>' +
-          '</td>';
-        
-        tbody.appendChild(tr);
-      });
-      
-      DOM.productList.innerHTML = '';
-      DOM.productList.appendChild(tbody);
-    }
+    document.getElementById('sign-out-button').onclick = () => auth.signOut();
 
     window.prepareAdd = function() {
       DOM.form.reset();
       document.getElementById('edit-slug').value = '';
-      DOM.modalTitle.textContent = 'Add New Product';
+      DOM.modalTitle.textContent = 'Add Product';
+    };
+
+    window.saveProduct = async function() {
+      const slug = document.getElementById('edit-slug').value;
+      const data = {
+        title: document.getElementById('p-title').value,
+        price: document.getElementById('p-price').value,
+        stock: document.getElementById('p-stock').value,
+        featured_image_path: document.getElementById('p-img').value
+      };
+      DOM.saveBtn.disabled = true;
+      try {
+        const url = slug ? WORKER_URL + '/products/' + slug : WORKER_URL + '/products';
+        await fetch(url, {
+          method: slug ? 'PUT' : 'POST',
+          headers: { 'Authorization': 'Bearer ' + API_SECRET, 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+        loadProducts(DOM);
+      } catch (e) { alert(e.message); }
+      finally { DOM.saveBtn.disabled = false; }
     };
 
     window.editProduct = async function(slug) {
-      console.log("Editing product:", slug);
       try {
         const res = await fetch(WORKER_URL + '/products/' + slug, {
           headers: { 'Authorization': 'Bearer ' + API_SECRET }
         });
         const p = await res.json();
-        
         document.getElementById('edit-slug').value = slug;
-        document.getElementById('p-title').value = p.title;
-        document.getElementById('p-code').value = p.code || '';
-        document.getElementById('p-price').value = p.price;
+        document.getElementById('p-title').value = p.title || '';
+        document.getElementById('p-price').value = p.price || '';
         document.getElementById('p-stock').value = p.stock || '';
-        document.getElementById('p-img').value = p.featured_image_path;
-        document.getElementById('p-desc').value = p.description || '';
-        document.getElementById('p-content').value = p.content || '';
-        
+        document.getElementById('p-img').value = p.featured_image_path || '';
         DOM.modalTitle.textContent = 'Edit Product';
         new bootstrap.Modal(document.getElementById('productModal')).show();
-      } catch (err) {
-        alert('Error: ' + err.message);
-      }
-    };
-
-    window.saveProduct = async function() {
-      const slug = document.getElementById('edit-slug').value;
-      const btn = DOM.saveBtn;
-      
-      const data = {
-        title: document.getElementById('p-title').value,
-        code: document.getElementById('p-code').value,
-        price: document.getElementById('p-price').value,
-        stock: document.getElementById('p-stock').value,
-        featured_image_path: document.getElementById('p-img').value,
-        description: document.getElementById('p-desc').value,
-        content: document.getElementById('p-content').value,
-        categories: 'T-Shirt',
-        tags: 'Terbaru',
-        styles: [{ name: 'Default', color: '#000000', image_path: document.getElementById('p-img').value }],
-        sizes: ['Small', 'Medium', 'Large', 'XL']
-      };
-
-      btn.disabled = true;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Saving...';
-      
-      try {
-        const method = slug ? 'PUT' : 'POST';
-        const url = slug ? WORKER_URL + '/products/' + slug : WORKER_URL + '/products';
-        const res = await fetch(url, {
-          method: method,
-          headers: { 'Authorization': 'Bearer ' + API_SECRET, 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        if (!res.ok) throw new Error('Worker rejected the request');
-        
-        bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
-        await window.loadProducts(); // Refresh list
-      } catch (err) {
-        alert('Save Error: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-      }
+      } catch (e) { alert(e.message); }
     };
 
     window.deleteProduct = async function(slug) {
-      if (!confirm('Hapus produk ' + slug + '?')) return;
-      
-      const originalContent = DOM.productList.innerHTML;
-      DOM.productList.innerHTML = '<tr><td colspan="5" class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></td></tr>';
-      
+      if (!confirm('Delete ' + slug + '?')) return;
       try {
         await fetch(WORKER_URL + '/products/' + slug, {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + API_SECRET }
         });
-        await window.loadProducts();
-      } catch (err) {
-        DOM.productList.innerHTML = originalContent;
-        alert('Delete Error: ' + err.message);
-      }
+        loadProducts(DOM);
+      } catch (e) { alert(e.message); }
     };
   }
 
-  // Jalankan segera
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAdmin);
-  } else {
-    initAdmin();
+  async function loadProducts(DOM) {
+    DOM.list.innerHTML = '<tr><td colspan="5" class="text-center py-5"><div class="spinner-border spinner-border-sm text-primary"></div> Fetching...</td></tr>';
+    try {
+      const res = await fetch(WORKER_URL + '/products', {
+        headers: { 'Authorization': 'Bearer ' + API_SECRET }
+      });
+      const data = await res.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      if (!Array.isArray(data)) {
+        console.error("Expected array but got:", data);
+        throw new Error("Invalid data format from API");
+      }
+
+      let html = '';
+      data.forEach(p => {
+        const slug = p.url ? p.url.split('/').pop() : 'no-slug';
+        html += `<tr>
+          <td class="ps-4"><b>${p.title || 'Untitled'}</b></td>
+          <td><code>${slug}</code></td>
+          <td><span class="text-success">Rp ${p.harga || '0'}</span></td>
+          <td><span class="badge ${p.stock === 'Tersedia' ? 'bg-success' : 'bg-danger'}">${p.stock || 'Habis'}</span></td>
+          <td class="text-end pe-4">
+            <button class="btn btn-sm btn-outline-dark" onclick="editProduct('${slug}')"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${slug}')"><i class="fas fa-trash"></i></button>
+          </td></tr>`;
+      });
+      DOM.list.innerHTML = html || '<tr><td colspan="5" class="text-center py-5 text-muted">No products found.</td></tr>';
+    } catch (e) { 
+      console.error("Load failed:", e);
+      DOM.list.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i> Error: ${e.message}<br>
+        <small class="text-muted">Check Worker environment variables (GITHUB_TOKEN, etc.)</small>
+      </td></tr>`;
+    }
   }
+
+  const poll = setInterval(() => {
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+      clearInterval(poll);
+      init();
+    }
+  }, 100);
+})();
 </script>
