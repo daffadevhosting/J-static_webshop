@@ -72,15 +72,23 @@ permalink: /admin
                             <input type="text" id="p-code" class="form-control" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label small fw-bold">Price</label>
+                            <label class="form-label small fw-bold">Price (e.g. 15.000)</label>
                             <input type="text" id="p-price" class="form-control" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label small fw-bold">Stock</label>
+                            <label class="form-label small fw-bold">Stock Status</label>
                             <select id="p-stock" class="form-select">
                                 <option value="Tersedia">Tersedia</option>
                                 <option value="">Habis</option>
                             </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Category</label>
+                            <input type="text" id="p-category" class="form-control" placeholder="T-Shirt">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Tags (Comma separated)</label>
+                            <input type="text" id="p-tags" class="form-control" placeholder="Terbaru, Terlaris">
                         </div>
                         <div class="col-12 mb-3">
                             <label class="form-label small fw-bold">Description</label>
@@ -90,7 +98,7 @@ permalink: /admin
                             <label class="form-label small fw-bold">Upload Images (Max 5, Max 1MB each)</label>
                             <input type="file" id="p-images" class="form-control" multiple accept="image/*">
                             <div id="image-previews" class="d-flex flex-wrap gap-2 mt-2"></div>
-                            <small class="text-muted">First image will be the Featured Image.</small>
+                            <small class="text-muted">Images will automatically create product gallery.</small>
                         </div>
                         <div class="col-12 mb-3">
                             <label class="form-label small fw-bold">Content (Markdown)</label>
@@ -108,7 +116,7 @@ permalink: /admin
 
 <script>
 (function() {
-  console.log("=== ADMIN DASHBOARD v4.1 (Image Upload) ===");
+  console.log("=== ADMIN DASHBOARD v4.2 (Sync Schema) ===");
 
   const firebaseConfig = {
     apiKey: "{{ site.env.API_KEY }}",
@@ -123,6 +131,7 @@ permalink: /admin
   const API_SECRET = "{{ site.api_secret }}";
 
   let uploadedImages = [];
+  let currentStyles = [];
 
   function init() {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -153,7 +162,6 @@ permalink: /admin
 
     document.getElementById('sign-out-button').onclick = () => auth.signOut();
 
-    // Image handling
     DOM.fileInput.onchange = async (e) => {
       const files = Array.from(e.target.files);
       if (files.length > 5) {
@@ -192,20 +200,26 @@ permalink: /admin
       DOM.form.reset();
       DOM.previews.innerHTML = '';
       uploadedImages = [];
+      currentStyles = [];
       document.getElementById('edit-slug').value = '';
       DOM.modalTitle.textContent = 'Add Product';
     };
 
     window.saveProduct = async function() {
       const slug = document.getElementById('edit-slug').value;
+      const tags = document.getElementById('p-tags').value.split(',').map(t => t.trim()).filter(t => t !== '');
+      
       const data = {
-        title: document.getElementById('p-title').value,
         code: document.getElementById('p-code').value,
+        title: document.getElementById('p-title').value,
         price: document.getElementById('p-price').value,
         stock: document.getElementById('p-stock').value,
+        category: document.getElementById('p-category').value,
+        tags: tags,
         description: document.getElementById('p-desc').value,
         content: document.getElementById('p-content').value,
-        images: uploadedImages
+        images: uploadedImages,
+        styles: currentStyles // Send back existing styles if no new images
       };
 
       DOM.saveBtn.disabled = true;
@@ -242,21 +256,26 @@ permalink: /admin
         document.getElementById('p-code').value = p.code || '';
         document.getElementById('p-price').value = p.price || '';
         document.getElementById('p-stock').value = p.stock || '';
+        document.getElementById('p-category').value = p.categories || '';
+        document.getElementById('p-tags').value = Array.isArray(p.tags) ? p.tags.join(', ') : (p.tags || '');
         document.getElementById('p-desc').value = p.description || '';
         document.getElementById('p-content').value = p.content || '';
         
         DOM.previews.innerHTML = '';
         uploadedImages = [];
+        currentStyles = p.styles || [];
         
-        // Show current featured image if exists
-        if (p.featured_image_path) {
-            const img = document.createElement('img');
-            img.src = p.featured_image_path;
-            img.className = 'rounded border border-primary shadow-sm';
-            img.style.width = '80px';
-            img.style.height = '80px';
-            img.style.objectFit = 'cover';
-            DOM.previews.appendChild(img);
+        // Show current styles/images
+        if (p.styles && p.styles.length > 0) {
+            p.styles.forEach(s => {
+                const img = document.createElement('img');
+                img.src = s.image_path;
+                img.className = 'rounded border shadow-sm';
+                img.style.width = '60px';
+                img.style.height = '60px';
+                img.style.objectFit = 'cover';
+                DOM.previews.appendChild(img);
+            });
         }
 
         DOM.modalTitle.textContent = 'Edit Product';
