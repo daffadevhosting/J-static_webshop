@@ -162,6 +162,18 @@ permalink: /admin
   function init() {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    async function checkAdminRole(user) {
+      if (!user) return false;
+      try {
+        const doc = await db.collection('users').doc(user.uid).get();
+        return doc.exists && doc.data().role === 'admin';
+      } catch (error) {
+        console.error("Role check error:", error);
+        return false;
+      }
+    }
 
     const DOM = {
       loading: document.getElementById('loading-screen'),
@@ -177,11 +189,19 @@ permalink: /admin
       newSizeInput: document.getElementById('new-size')
     };
 
-    auth.onAuthStateChanged(function(user) {
+    auth.onAuthStateChanged(async function(user) {
       if (!user) {
         window.location.href = "{{ '/admin/login' | relative_url }}";
         return;
       }
+
+      const isAdmin = await checkAdminRole(user);
+      if (!isAdmin) {
+        await window.showAlert("Akses Ditolak", "Anda tidak memiliki hak akses admin.", "error");
+        auth.signOut();
+        return;
+      }
+
       DOM.loading.style.display = 'none';
       DOM.dashboard.style.display = 'block';
       DOM.email.textContent = user.email;

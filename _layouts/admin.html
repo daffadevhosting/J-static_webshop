@@ -9,6 +9,18 @@
     <script src="{{ '/assets/js/jquery/jquery.min.js' | relative_url }}"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="{{ '/assets/js/sweetalert.min.js' | relative_url }}"></script>
+    <script>
+        window.showAlert = (title, text, icon) => {
+            return swal({
+                title: title,
+                text: text,
+                icon: icon,
+                button: "OK",
+            });
+        };
+    </script>
     <style>
         body { background-color: #f8f9fa; }
         #loading-screen { position: fixed; inset: 0; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }

@@ -79,28 +79,86 @@ permalink: /admin/login
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  async function checkAdminRole(user) {
+    if (!user) return false;
+    try {
+      const doc = await db.collection('users').doc(user.uid).get();
+      if (doc.exists && doc.data().role === 'admin') {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Role check error:", error);
+      return false;
+    }
+  }
+
+  function getFriendlyMessage(error) {
+    const code = error.code || '';
+    switch (code) {
+      case 'auth/invalid-email':
+        return "Format email tidak valid.";
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+      case 'auth/invalid-login-credentials':
+        return "Email atau password salah.";
+      case 'auth/user-disabled':
+        return "Akun ini telah dinonaktifkan.";
+      case 'auth/too-many-requests':
+        return "Terlalu banyak percobaan login. Silakan coba lagi nanti.";
+      case 'auth/network-request-failed':
+        return "Gagal terhubung ke server. Periksa koneksi internet Anda.";
+      case 'auth/internal-error':
+        return "Terjadi kesalahan internal. Silakan coba lagi.";
+      default:
+        // Handle case where message might be a JSON string from API
+        if (error.message && error.message.includes('INVALID_LOGIN_CREDENTIALS')) {
+            return "Email atau password salah.";
+        }
+        return error.message || "Terjadi kesalahan yang tidak diketahui.";
+    }
+  }
 
   document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const errorDiv = document.getElementById('error-message');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
     
     errorDiv.classList.add('d-none');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Signing In...';
     
     try {
-      await auth.signInWithEmailAndPassword(email, password);
-      window.location.href = "{{ '/admin/' | relative_url }}";
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const isAdmin = await checkAdminRole(userCredential.user);
+      
+      if (isAdmin) {
+        window.location.href = "{{ '/admin/' | relative_url }}";
+      } else {
+        await auth.signOut();
+        throw { code: 'auth/access-denied', message: "Akses Ditolak: Anda tidak memiliki hak akses admin." };
+      }
     } catch (error) {
-      errorDiv.textContent = error.message;
+      errorDiv.textContent = getFriendlyMessage(error);
       errorDiv.classList.remove('d-none');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Sign In <i class="fas fa-sign-in-alt ms-2"></i>';
     }
   });
 
-  // Redirect if already logged in
-  auth.onAuthStateChanged(user => {
+  // Redirect if already logged in as admin
+  auth.onAuthStateChanged(async user => {
     if (user) {
-      window.location.href = "{{ '/admin/' | relative_url }}";
+      const isAdmin = await checkAdminRole(user);
+      if (isAdmin) {
+        window.location.href = "{{ '/admin/' | relative_url }}";
+      } else {
+        await auth.signOut();
+      }
     }
   });
 </script>
