@@ -13,7 +13,7 @@ permalink: /data_product.json
         "title": {{ item.title | jsonify }},
         "sku": {{ item.code | default: "" | jsonify }},
         "price": {{ item.price | jsonify }},
-        "discount": {{ item.discount | jsonify }},
+        "discount": {{ item.discount | default: "Tidak Ada" | jsonify }},
         "stock": {{ item.stock |jsonify }},
         "description": {{ item.description | strip_html | strip_newlines | jsonify }},
         "image": {{ item.featured_image_path | jsonify }},
