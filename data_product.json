@@ -11,10 +11,10 @@ permalink: /data_product.json
         "slug": {{ item.title | slugify | jsonify }},
         "url": {{ item.url | jsonify }},
         "title": {{ item.title | jsonify }},
-        "sku": {{ item.categories | default: "" | jsonify }},
+        "sku": {{ item.sku | default: "" | jsonify }},
         "price": {{ item.price | jsonify }},
         "discount": {{ item.discount | jsonify }},
-        "stok": {{ item.stok |jsonify }},
+        "stock": {{ item.stock |jsonify }},
         "description": {{ item.description | strip_html | strip_newlines | jsonify }},
         "image": {{ item.featured_image_path | jsonify }},
         "styles": [
